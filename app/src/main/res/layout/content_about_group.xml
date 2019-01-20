@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".AboutGroupActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="19dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        app:cardCornerRadius="9dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_grad_purple"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="38dp">
+
+                <EditText
+                    android:id="@+id/group_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_weight="1"
+                    android:hint="Group Name"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <com.rm.rmswitch.RMSwitch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="14dp"
+                    android:layout_marginTop="16dp"
+                    app:checked="true"
+                    app:enabled="true"
+                    app:forceAspectRatio="false"
+                    app:switchBkgCheckedColor="#00ffff"
+                    app:switchBkgNotCheckedColor="#00ffff"
+                    app:switchDesign="android"
+                    app:switchToggleCheckedColor="#ffffff"
+                    app:switchToggleNotCheckedColor="#000000" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view_all_alarms_in_a_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+            <!--This is for the individual alarm of the group-->
+            <!--<android.support.v7.widget.CardView-->
+            <!--android:onClick="editAlarm"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/white"-->
+            <!--app:cardElevation="10dp"-->
+            <!--android:layout_marginLeft="11dp"-->
+            <!--android:layout_marginRight="11dp"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--app:cardCornerRadius="9dp">-->
+            <!---->
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
+            <!---->
+            <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:textSize="13sp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:layout_marginTop="9dp"-->
+            <!--android:layout_marginBottom="9dp"-->
+            <!--android:layout_marginLeft="13dp"-->
+            <!--android:text="11:00 AM"/>-->
+
+            <!--<com.rm.rmswitch.RMSwitch-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="14dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--app:checked="true"-->
+            <!--app:enabled="true"-->
+            <!--app:forceAspectRatio="false"-->
+            <!--app:switchBkgCheckedColor="#909090"-->
+            <!--app:switchBkgNotCheckedColor="#909090"-->
+            <!--app:switchToggleCheckedColor="@color/fabBlue"-->
+            <!--app:switchToggleNotCheckedColor="#000000"-->
+            <!--app:switchDesign="android"/>-->
+
+
+            <!---->
+            <!--</LinearLayout>-->
+
+
+            <!--</android.support.v7.widget.CardView>-->
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

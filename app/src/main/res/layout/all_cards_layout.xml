@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/allCard"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="20dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginLeft="49dp"
+    android:layout_marginRight="49dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="28dp"
+            android:paddingTop="27dp"
+            android:paddingBottom="35dp">
+
+            <LinearLayout
+                android:paddingBottom="13dp"
+                android:paddingTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/time"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:textColor="@color/pureBlack"
+                    android:layout_height="wrap_content"
+                    android:text="11:00 AM" />
+
+                <com.rm.rmswitch.RMSwitch
+                    android:id="@+id/rms_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="27dp"
+                    app:checked="true"
+                    app:forceAspectRatio="false"
+                    app:enabled="true"
+                    app:switchDesign="android"
+                    app:switchBkgCheckedColor="#909090"
+                    app:switchBkgNotCheckedColor="#909090"
+                    app:switchToggleCheckedColor="@color/fabBlue"
+                    app:switchToggleNotCheckedColor="#000000"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/group_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:textColor="@color/pureBlack"
+                android:text="Group Name" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>

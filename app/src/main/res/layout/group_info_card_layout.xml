@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/allCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    app:cardElevation="10dp"
+    android:layout_marginLeft="11dp"
+    android:layout_marginRight="11dp"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="9dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginTop="9dp"
+            android:layout_marginBottom="9dp"
+            android:layout_marginLeft="13dp"
+            android:text="11:00 AM"/>
+
+        <com.rm.rmswitch.RMSwitch
+            android:id="@+id/rmsSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="14dp"
+            android:layout_gravity="center"
+            app:checked="true"
+            app:enabled="true"
+            app:forceAspectRatio="false"
+            app:switchBkgCheckedColor="#909090"
+            app:switchBkgNotCheckedColor="#909090"
+            app:switchToggleCheckedColor="@color/fabBlue"
+            app:switchToggleNotCheckedColor="#000000"
+            app:switchDesign="android"/>
+
+
+
+
+    </LinearLayout>
+
+
+
+</android.support.v7.widget.CardView>

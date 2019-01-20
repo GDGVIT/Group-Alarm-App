@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="purple_grad_start">#9158ED</color>
+    <color name="purple_grad_end">#B05FE2</color>
+    <color name="white">#ffffff</color>
+    <color name="fabBlue">#1e59f6</color>
+    <color name="pureBlack">#000000</color>
+</resources>
