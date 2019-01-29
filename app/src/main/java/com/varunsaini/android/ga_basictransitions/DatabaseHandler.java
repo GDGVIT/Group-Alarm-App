@@ -30,6 +30,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_VIBRATE = "vibrate";
     private static final String KEY_ALARM_PENDING_REQ_CODE = "alarm_pending_req_code";
 
+    private static final String DAYS_TABLE_NAME = "days_alarm";
+    private static final String KEY_DAYS_REQUEST_CODE = "days_req_code";
+
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         //3rd argument to be passed is CursorFactory instance
@@ -52,11 +56,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_ALARM_TABLE);
         Log.d("create", "onCreate: "+CREATE_ALARM_TABLE);
 
+        String CREATE_DAYS_REQ_TABLE = "CREATE TABLE IF NOT EXISTS "+ DAYS_TABLE_NAME + " (" +
+                KEY_DAYS_REQUEST_CODE + " INTEGER PRIMARY KEY )";
+        db.execSQL(CREATE_DAYS_REQ_TABLE);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DAYS_TABLE_NAME);
         onCreate(db);
         Log.d("upgrade", "onUpgrade: passed onupgrade");
     }
@@ -289,4 +298,88 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return groupInfoArrayList;
     }
+
+    public int[] getHoursMin(int request_code){
+        int[] hourMin = new int[2];
+        String requestQuery = "SELECT " + KEY_HOUR + " , " + KEY_MINUTE + " FROM " +
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + "="+request_code;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(requestQuery,null);
+        c.moveToFirst();
+        hourMin[0] = c.getInt(0);
+        hourMin[1] = c.getInt(1);
+
+        return hourMin;
+    }
+
+
+    public String getDaysToRing(int request_code) {
+        String requestQuery = "SELECT " + KEY_DAYS + " FROM " +
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + "="+request_code;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(requestQuery,null);
+        c.moveToFirst();
+        return(c.getString(0));
+    }
+    /////////////////////////////////////////////////////////////////////////
+    public void addDaysPendingReq(int request_code){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_DAYS_REQUEST_CODE,request_code);
+        db.insert(DAYS_TABLE_NAME,null,values);
+        db.close();
+    }
+
+    public void removeDaysPendingReq(int request_code){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(DAYS_TABLE_NAME,KEY_DAYS_REQUEST_CODE+ " like " + "'" + request_code + "%'",null);
+    }
+
+    public ArrayList<Integer> getAllDaysIntents(){
+
+        ArrayList<Integer> array = new ArrayList<>();
+        String selectQuery = "SELECT *" + " FROM " + DAYS_TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        if(c!=null && c.moveToFirst()){
+            do{
+                array.add(c.getInt(0));
+
+            }while (c.moveToNext());
+        }
+
+        return array;
+    }
+
+    public ArrayList<Integer> getThisAlarmIntents(int request_code){
+
+        ArrayList<Integer> array = new ArrayList<>();
+        String selectQuery = "SELECT * " + " FROM " + DAYS_TABLE_NAME + " WHERE "+ KEY_DAYS_REQUEST_CODE+ " LIKE " + "'" + request_code + "%'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        if(c!=null && c.moveToFirst()){
+            do{
+                array.add(c.getInt(0));
+
+            }while (c.moveToNext());
+        }
+
+        return array;
+    }
+
+    public void getAllDaysReqCodesInLogcat(){
+
+        String selectQuery = "SELECT * " + " FROM " + DAYS_TABLE_NAME;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        if(c!=null && c.moveToFirst()){
+            do{
+                Log.d("alldaysalarm", "getAllDaysReqCodes: " + (c.getInt(0) + "\n"));
+
+            }while (c.moveToNext());
+        }
+    }
+
 }

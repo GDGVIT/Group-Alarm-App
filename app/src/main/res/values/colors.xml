@@ -8,4 +8,5 @@
     <color name="white">#ffffff</color>
     <color name="fabBlue">#1e59f6</color>
     <color name="pureBlack">#000000</color>
+    <color name="twentyFivePercentVisible">#40000000</color>
 </resources>

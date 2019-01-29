@@ -5,14 +5,19 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     app:cardElevation="10dp"
-    android:layout_marginLeft="11dp"
-    android:layout_marginRight="11dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginTop="4dp"
     app:cardCornerRadius="9dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -22,11 +27,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="13sp"
+            android:textSize="31sp"
             android:textStyle="bold"
-            android:layout_marginTop="9dp"
-            android:layout_marginBottom="9dp"
-            android:layout_marginLeft="13dp"
             android:text="11:00 AM"/>
 
         <com.rm.rmswitch.RMSwitch
@@ -38,8 +40,8 @@
             app:checked="true"
             app:enabled="true"
             app:forceAspectRatio="false"
-            app:switchBkgCheckedColor="#909090"
-            app:switchBkgNotCheckedColor="#909090"
+            app:switchBkgCheckedColor="#40000000"
+            app:switchBkgNotCheckedColor="#40000000"
             app:switchToggleCheckedColor="@color/fabBlue"
             app:switchToggleNotCheckedColor="#000000"
             app:switchDesign="android"/>

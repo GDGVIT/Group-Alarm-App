@@ -12,10 +12,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Group Alarm"
-            android:textSize="24sp"
-            android:layout_marginLeft="16dp"
+            android:textSize="37sp"
             android:textColor="@color/pureBlack"
+            android:layout_marginLeft="25dp"
             android:textStyle="bold"
+            android:padding="10dp"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             />

@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -23,6 +24,7 @@ import android.transition.Fade;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -34,12 +36,21 @@ public class GroupActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     SQLiteDatabase sqLiteDatabase;
     DatabaseHandler db;
+    TextView allView,groupView;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Karla-Bold.ttf");
+
+        allView = findViewById(R.id.group_all_text);
+        groupView = findViewById(R.id.group_group_text);
+        allView.setTypeface(tf);
+        groupView.setTypeface(tf);
+
 
         db = new DatabaseHandler(this);
         sqLiteDatabase = this.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
@@ -55,6 +66,9 @@ public class GroupActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
         View view =getSupportActionBar().getCustomView();
+
+        TextView title = view.findViewById(R.id.title);
+        title.setTypeface(tf);
 
 
         CardView allButton = findViewById(R.id.group_all);

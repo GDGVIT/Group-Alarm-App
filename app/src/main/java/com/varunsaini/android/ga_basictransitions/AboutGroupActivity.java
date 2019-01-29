@@ -31,6 +31,7 @@ public class AboutGroupActivity extends AppCompatActivity {
     DatabaseHandler db;
     EditText groupNameEditext;
     String groupName;
+    String groupNameOnGroupOpen = "";
 
 
     @Override
@@ -53,6 +54,7 @@ public class AboutGroupActivity extends AppCompatActivity {
         groupName = getIntent().getStringExtra("groupName");
         if (groupName!=null){
             groupNameEditext.setText(groupName);
+            groupNameOnGroupOpen = groupName;
             ArrayList<GroupInfo> groupInfoArrayList = db.getAllGroupInfo(groupName);
             recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_all_alarms_in_a_group);
             recyclerView.setHasFixedSize(true);
@@ -97,12 +99,29 @@ public class AboutGroupActivity extends AppCompatActivity {
             Toast.makeText(this, "Group Name Already Exists", Toast.LENGTH_SHORT).show();
         }
 
-
     }
 
     @Override
     public void onBackPressed() {
-        db.changeGroupName(groupName,groupNameEditext.getText().toString());
-        startActivity(new Intent(this,GroupActivity.class));
+        int groupNameFoundInDatabase = 0;
+        String editText = groupNameEditext.getText().toString();
+        ArrayList<String> allGroupNames = db.getAllGroupNames();
+        allGroupNames.remove(groupName);
+        for(int i=0;i<allGroupNames.size();i++){
+            if(editText.equals(allGroupNames.get(i))){
+                groupNameFoundInDatabase = 1;
+            }
+        }
+        if(!editText.equals("") && groupNameFoundInDatabase == 0) {
+            db.changeGroupName(groupName, editText);
+            startActivity(new Intent(this, GroupActivity.class));
+        }else if(editText.equals("") && !groupNameOnGroupOpen.equals("")){
+            Toast.makeText(this, "Give a Group Name first", Toast.LENGTH_SHORT).show();
+        }else if(groupNameFoundInDatabase==1){
+            Toast.makeText(this, "Group Name Already Exists", Toast.LENGTH_SHORT).show();
+        }else if(groupNameOnGroupOpen.equals("")){
+            startActivity(new Intent(this, GroupActivity.class));
+        }
     }
+
 }

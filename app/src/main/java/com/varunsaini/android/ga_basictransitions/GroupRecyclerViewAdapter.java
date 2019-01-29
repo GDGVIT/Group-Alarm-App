@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -48,30 +49,37 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
         String ee = s.get(i).moreAlarm;
         int ff = s.get(i).isGroupOn;
 
+        Typeface tf = Typeface.createFromAsset(assetManager,"fonts/Karla-Bold.ttf");
+        groupRecyclerViewHolder.groupName.setTypeface(tf);
+
         groupRecyclerViewHolder.groupName.setText(aa);
 
         if(bb==null){
             groupRecyclerViewHolder.firstAlarm.setVisibility(View.GONE);
         }else{
             groupRecyclerViewHolder.firstAlarm.setText(bb);
+            groupRecyclerViewHolder.firstAlarm.setTypeface(tf);
         }
 
         if(cc==null){
             groupRecyclerViewHolder.secondAlarm.setVisibility(View.GONE);
         }else{
             groupRecyclerViewHolder.secondAlarm.setText(cc);
+            groupRecyclerViewHolder.secondAlarm.setTypeface(tf);
         }
 
         if(dd==null){
             groupRecyclerViewHolder.thirdAlarm.setVisibility(View.GONE);
         }else{
             groupRecyclerViewHolder.thirdAlarm.setText(dd);
+            groupRecyclerViewHolder.thirdAlarm.setTypeface(tf);
         }
 
         if(ee==null){
             groupRecyclerViewHolder.moreAlarm.setVisibility(View.GONE);
         }else{
             groupRecyclerViewHolder.moreAlarm.setText(ee);
+            groupRecyclerViewHolder.moreAlarm.setTypeface(tf);
         }
 
         if (ff==0){

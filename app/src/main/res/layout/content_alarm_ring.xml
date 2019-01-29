@@ -7,40 +7,70 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".AlarmRingActivity"
-    tools:showIn="@layout/activity_alarm_ring">
+    tools:context=".AlarmRingActivity">
+    <!--tools:showIn="@layout/activity_alarm_ring">-->
+    <!--<android.support.v7.widget.CardView-->
+        <!--app:cardElevation="10dp"-->
+        <!--app:cardCornerRadius="20dp"-->
+        <!--android:onClick="snoozeAlarm"-->
+        <!--app:cardBackgroundColor="@color/white"-->
+        <!--android:layout_marginTop="139dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+<!--&gt;-->
 
-    <android.support.v7.widget.CardView
-        app:cardElevation="10dp"
-        app:cardCornerRadius="20dp"
-        android:onClick="snoozeAlarm"
-        app:cardBackgroundColor="@color/white"
-        android:layout_marginTop="139dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Snooze"-->
+            <!--android:textSize="27sp"-->
+            <!--android:paddingRight="37dp"-->
+            <!--android:paddingLeft="37dp"-->
+            <!--android:paddingBottom="21dp"-->
+            <!--android:paddingTop="21dp"-->
+            <!--/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Snooze"
-            android:textSize="27sp"
-            android:paddingRight="37dp"
-            android:paddingLeft="37dp"
-            android:paddingBottom="21dp"
-            android:paddingTop="21dp"
-            />
+    <!--</android.support.v7.widget.CardView>-->
+    <!--<TextView-->
+        <!--android:onClick="dismissAlarm"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="189dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:text="Close"-->
+        <!--android:textSize="27sp"-->
+        <!--android:textColor="@color/white"/>-->
 
-    </android.support.v7.widget.CardView>
     <TextView
-        android:onClick="dismissAlarm"
+        android:id="@+id/snoozeText"
+        android:text="Snooze"
+        android:padding="16dp"
+        android:textColor="@color/white"
+        android:textSize="36sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="189dp"
         android:layout_gravity="center_horizontal"
-        android:text="Close"
-        android:textSize="27sp"
-        android:textColor="@color/white"/>
+        android:layout_marginTop="64dp"/>
+
+    <TextView
+        android:id="@+id/action_button"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="200dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/cancelText"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:padding="16dp"
+        android:textSize="39sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="36dp"/>
 
 </LinearLayout>

@@ -7,21 +7,19 @@
     app:cardCornerRadius="20dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="16dp"
-    android:layout_marginLeft="49dp"
-    android:layout_marginRight="49dp"
+    android:layout_marginLeft="24dp"
+    android:layout_marginRight="24dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="28dp"
-            android:paddingTop="27dp"
-            android:paddingBottom="35dp">
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
             <LinearLayout
-                android:paddingBottom="13dp"
-                android:paddingTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -47,8 +45,8 @@
                     app:forceAspectRatio="false"
                     app:enabled="true"
                     app:switchDesign="android"
-                    app:switchBkgCheckedColor="#909090"
-                    app:switchBkgNotCheckedColor="#909090"
+                    app:switchBkgCheckedColor="#40000000"
+                    app:switchBkgNotCheckedColor="#40000000"
                     app:switchToggleCheckedColor="@color/fabBlue"
                     app:switchToggleNotCheckedColor="#000000"/>
             </LinearLayout>
@@ -58,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="19sp"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/pureBlack"
                 android:text="Group Name" />
 

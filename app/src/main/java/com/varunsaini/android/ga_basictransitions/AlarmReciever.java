@@ -23,17 +23,18 @@ public class AlarmReciever extends BroadcastReceiver {
 
     private boolean isplaying;
     public static Ringtone r;
-    public static int request_id;
+    public static int request_id,batch_request_id;
     private static String ringtoneString;
     private static Uri ringtoneUri;
     @Override
     public void onReceive(Context context, Intent intent) {
         DatabaseHandler db = new DatabaseHandler(context);
         SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
+        batch_request_id = intent.getIntExtra("batch_request_code",-1);
         request_id = intent.getIntExtra("request_code",-1);
 //        ringtoneString = intent.getStringExtra("ringtone");
 
-        if(request_id!=-1){
+        if(batch_request_id!=-1){
         ringtoneString = db.getRingtoneUri(request_id);}
         if(ringtoneString!=null){
             ringtoneUri = Uri.parse(ringtoneString);

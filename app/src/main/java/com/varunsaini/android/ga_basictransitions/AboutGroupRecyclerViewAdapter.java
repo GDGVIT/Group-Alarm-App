@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +49,8 @@ public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGro
         final int cc = s.get(i).alarm_pending_req_code;
 
         aboutGroupRecyclerViewHolder.time.setText(aa);
+        Typeface tf = Typeface.createFromAsset(assetManager,"fonts/Karla-Bold.ttf");
+        aboutGroupRecyclerViewHolder.time.setTypeface(tf);
 
         if (bb==0){
             aboutGroupRecyclerViewHolder.rmsSwitch.setChecked(false);

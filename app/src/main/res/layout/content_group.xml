@@ -9,6 +9,64 @@
     tools:context=".AllActivity"
     tools:showIn="@layout/activity_all">
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:id="@+id/group_all"-->
+            <!--app:cardElevation="10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="41dp"-->
+            <!--android:layout_marginLeft="49dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:layout_marginTop="22dp"-->
+            <!--app:cardBackgroundColor="@color/white"-->
+            <!--app:cardCornerRadius="21dp">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:elevation="10dp"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingLeft="50dp"-->
+                <!--android:paddingRight="50dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:text="All"-->
+                <!--android:textColor="@color/pureBlack"-->
+                <!--android:textSize="19sp" />-->
+
+        <!--</android.support.v7.widget.CardView>-->
+
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:id="@+id/all_group"-->
+            <!--app:cardElevation="10dp"-->
+            <!--app:cardBackgroundColor="@color/fabBlue"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="42dp"-->
+            <!--android:layout_marginTop="21dp"-->
+            <!--app:cardCornerRadius="21dp">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:elevation="10dp"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="11dp"-->
+                <!--android:paddingLeft="29dp"-->
+                <!--android:paddingRight="29dp"-->
+                <!--android:paddingTop="11dp"-->
+                <!--android:text="Groups"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="19sp" />-->
+        <!--</android.support.v7.widget.CardView>-->
+
+    <!--</LinearLayout>-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,22 +77,23 @@
             app:cardElevation="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="41dp"
-            android:layout_marginLeft="49dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginTop="22dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="21dp">
 
             <TextView
+                android:id="@+id/group_all_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="10dp"
                 android:gravity="center"
-                android:paddingBottom="11dp"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
-                android:paddingTop="11dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="49dp"
+                android:paddingRight="49dp"
+                android:paddingTop="8dp"
                 android:text="All"
                 android:textColor="@color/pureBlack"
                 android:textSize="19sp" />
@@ -42,30 +101,32 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/all_group"
+            android:id="@+id/group_group"
             app:cardElevation="10dp"
-            app:cardBackgroundColor="@color/fabBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="42dp"
-            android:layout_marginTop="21dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="@color/fabBlue"
+            android:layout_marginTop="22dp"
             app:cardCornerRadius="21dp">
 
             <TextView
+                android:id="@+id/group_group_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="10dp"
                 android:gravity="center"
-                android:paddingBottom="11dp"
+                android:paddingBottom="8dp"
                 android:paddingLeft="29dp"
                 android:paddingRight="29dp"
-                android:paddingTop="11dp"
+                android:paddingTop="8dp"
                 android:text="Groups"
                 android:textColor="@color/white"
                 android:textSize="19sp" />
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view_group"
