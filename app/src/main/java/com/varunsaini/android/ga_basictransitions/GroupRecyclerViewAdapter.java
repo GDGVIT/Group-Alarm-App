@@ -1,17 +1,23 @@
 package com.varunsaini.android.ga_basictransitions;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.graphics.ColorSpace;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +30,8 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     ArrayList<Group> s;
     AssetManager assetManager;
     Context context;
+    boolean atLeastOneSelected = false;
+    int numberOfGroupsSelected = 0;
 
     public GroupRecyclerViewAdapter(ArrayList<Group> s){
         this.s = s;
@@ -34,25 +42,50 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     public GroupRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         View view = layoutInflater.inflate(R.layout.group_cards_layout,viewGroup,false);
+
         assetManager = viewGroup.getContext().getAssets();
         context = viewGroup.getContext();
 
         return new GroupRecyclerViewHolder(view);
     }
 
-    public void onBindViewHolder(@NonNull final GroupRecyclerViewAdapter.GroupRecyclerViewHolder groupRecyclerViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final GroupRecyclerViewAdapter.GroupRecyclerViewHolder groupRecyclerViewHolder, final int i) {
 
+        final Group model = s.get(i);
         final String aa = s.get(i).groupName;
-        String bb = s.get(i).oneAlarm;
-        String cc = s.get(i).twoAlarm;
-        String dd = s.get(i).threeAlarm;
+        final String bb = s.get(i).oneAlarm;
+        final String cc = s.get(i).twoAlarm;
+        final String dd = s.get(i).threeAlarm;
         String ee = s.get(i).moreAlarm;
-        int ff = s.get(i).isGroupOn;
+        final int ff = s.get(i).isGroupOn;
+        int gg = s.get(i).groupColor;
+        final boolean hh = s.get(i).isSelected;
 
         Typeface tf = Typeface.createFromAsset(assetManager,"fonts/Karla-Bold.ttf");
         groupRecyclerViewHolder.groupName.setTypeface(tf);
 
         groupRecyclerViewHolder.groupName.setText(aa);
+        if(!model.isSelected){
+            if(gg==1){
+                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_purple);
+            }else if(gg==2){
+                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_green);
+            }else if(gg==3){
+                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_pink);
+            }else if(gg==4){
+
+            }else if(gg==5){
+
+            }else if(gg==6){
+
+            }else if(gg==7){
+
+            }
+        }else{
+            groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
+        }
+
+
 
         if(bb==null){
             groupRecyclerViewHolder.firstAlarm.setVisibility(View.GONE);
@@ -89,13 +122,104 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
         }
 
         groupRecyclerViewHolder.allCard.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(context,AboutGroupActivity.class);
-                i.putExtra("groupName",aa);
-                context.startActivity(i);
+
+                if(!model.isSelected && atLeastOneSelected){
+                    numberOfGroupsSelected++;
+                    model.setSelected(true);
+                    groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
+                }else if(atLeastOneSelected && model.isSelected())
+                {
+                    numberOfGroupsSelected--;
+                    model.setSelected(false);
+                    if(model.groupColor==1){
+                        groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_purple);
+                    }else if(model.groupColor==2){
+                        groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_green);
+                    }else if(model.groupColor==3){
+                        groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_pink);
+                    }else if(model.groupColor==4){
+
+                    }else if(model.groupColor==5){
+
+                    }else if(model.groupColor==6){
+
+                    }else if(model.groupColor==7){
+
+                    }
+                    if(numberOfGroupsSelected==0){
+                        atLeastOneSelected = false;
+                    }
+                }if(!atLeastOneSelected){
+                    Intent i = new Intent(context, AboutGroupActivity.class);
+                    i.putExtra("groupName", aa);
+                    Activity activity = (Activity) context;
+                    activity.startActivity(i);
+                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+                Log.d("sasa", "onClick: single tap "+ numberOfGroupsSelected + "||" + atLeastOneSelected + "//" + model.isSelected);
+                Log.d("dfdf", "onClick: single Tap aboutAlarm"+aa+"||"+bb+"||"+cc+"||"+dd+"||"+ff+"||"+model.groupColor+"||"+model.isSelected);
+//                if(GroupActivity.isGroupSelected==1){
+//                    if(gg==1){
+//                        groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_purple);
+//                    }else if(gg==2){
+//                        groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_green);
+//                    }else if(gg==3){
+//                        groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_pink);
+//                    }else if(gg==4){
+//
+//                    }else if(gg==5){
+//
+//                    }else if(gg==6){
+//
+//                    }else if(gg==7){
+//
+//                    }
+//                    GroupActivity.isGroupSelected = 0;
+//                }
+//                }else {
+//                    Intent i = new Intent(context, AboutGroupActivity.class);
+//                    i.putExtra("groupName", aa);
+//                    Activity activity = (Activity) context;
+//                    activity.startActivity(i);
+//                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                }
             }
         });
+//
+        groupRecyclerViewHolder.allCard.setOnLongClickListener(new View.OnLongClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public boolean onLongClick(View v) {
+                atLeastOneSelected = true;
+                model.setSelected(true);
+                numberOfGroupsSelected++;
+                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
+
+//                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
+                return true;
+            }
+        });
+
+        if(gg==1){
+            groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_purple);
+        }else if(gg==2){
+            groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_green);
+        }else if(gg==3){
+            groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_pink);
+        }else if(gg==4){
+
+        }else if(gg==5){
+
+        }else if(gg==6){
+
+        }else if(gg==7){
+
+        }
+
+
 
     }
 
@@ -109,6 +233,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
         TextView groupName,firstAlarm,secondAlarm,thirdAlarm,moreAlarm;
         RMSwitch rmsSwitch;
         CardView allCard;
+        LinearLayout groupColor;
 
         public GroupRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,8 +244,10 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
             moreAlarm = itemView.findViewById(R.id.moreAlarm);
             rmsSwitch = itemView.findViewById(R.id.all_switch);
             allCard = itemView.findViewById(R.id.allCard);
+            groupColor = itemView.findViewById(R.id.groupColor);
 
         }
     }
+
 
 }

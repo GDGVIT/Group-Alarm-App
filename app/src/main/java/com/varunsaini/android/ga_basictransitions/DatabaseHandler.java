@@ -29,7 +29,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_RINGTONE_NAME = "ringtone_name";
     private static final String KEY_VIBRATE = "vibrate";
     private static final String KEY_ALARM_PENDING_REQ_CODE = "alarm_pending_req_code";
-
     private static final String DAYS_TABLE_NAME = "days_alarm";
     private static final String KEY_DAYS_REQUEST_CODE = "days_req_code";
 
@@ -92,7 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public ArrayList<AllAlarm> getAllActivtiyAlarmList(){
         String selectQuery = "SELECT " + KEY_HOUR +","+ KEY_MINUTE +","+ KEY_GROUP_NAME
-                +","+ KEY_ALARM_STATE +"," + KEY_ALARM_PENDING_REQ_CODE + " FROM " + TABLE_NAME;
+                +","+ KEY_ALARM_STATE +"," + KEY_ALARM_PENDING_REQ_CODE + "," + KEY_GROUP_COLOR + " FROM " + TABLE_NAME;
 
 //        String selectQuery = "SELECT hour,minute,group_name,alarm_state from alarm";
         ArrayList<AllAlarm> allAlarmArrayList = new ArrayList<>();
@@ -135,17 +134,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
-    public String getRingtoneUri(int request_id){
+    public String[] getRingtoneUriVibrate(int request_id){
 
-        String requestQuery = "SELECT "+ KEY_RINGTONE_NAME + " FROM " +
-                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + "="+request_id;
+        String[] array = new String[2];
+        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(0,7));
+        Log.d("jk", "getRingtoneUri: "+idd);
+
+        String requestQuery = "SELECT "+ KEY_RINGTONE_NAME + " , " + KEY_VIBRATE + " FROM " +
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + " LIKE '"+idd + "%'";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(requestQuery, null);
         Log.d("sas", "getRingtoneUri: "+requestQuery);
         c.moveToFirst();
-        String x = c.getString(0);
-        return (x);
+        String ringtone,vibrate;
+        if (c.getString(0)==null){
+            ringtone = null;
+        }else{
+            ringtone = c.getString(0);
+        }
 
+        if(c.getString(1)==null){
+            vibrate = null;
+        }else{
+            vibrate = c.getString(1);
+        }
+        array[0] = ringtone;
+        array[1] = vibrate;
+        return array;
     }
 
     public void updateAlarmState(int request_id,int newState){
@@ -173,7 +188,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<Group> getGroupActivityGroupList(){
-        String selectQuery = "SELECT DISTINCT " + KEY_GROUP_NAME + " FROM " + TABLE_NAME +
+        String selectQuery = "SELECT DISTINCT " + KEY_GROUP_NAME + " , " + KEY_GROUP_COLOR + " FROM " + TABLE_NAME +
                                 " WHERE " + KEY_GROUP_NAME + " NOT NULL " ;
         ArrayList<Group> groupArrayList = new ArrayList<>();
 
@@ -183,6 +198,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        int hoursIndex = c.getColumnIndex(KEY_HOUR);
 //        int minutesIndex = c.getColumnIndex(KEY_MINUTE);
         int groupName = c.getColumnIndex(KEY_GROUP_NAME);
+        int groupColor = c.getColumnIndex(KEY_GROUP_COLOR);
 
 
         if (c != null && c.moveToFirst()) {
@@ -218,7 +234,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                     }while (c1.moveToNext());
                 }
-                groupArrayList.add(new Group(c.getString(groupName),s[0],s[1],s[2],s[3],1));//1 is used as placeholder
+                groupArrayList.add(new Group(c.getString(groupName),s[0],s[1],s[2],s[3],1,c.getInt(groupColor),false));//1 is used as placeholder
             } while (c.moveToNext());
         }
 
@@ -251,8 +267,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(KEY_GROUP_NAME,newGroupName);
         db.update(TABLE_NAME, cv, KEY_GROUP_NAME + "= '" + previousGroupName + "'", null);
+    }
 
-
+    public void changeGroupColor(String groupName,int groupColor){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_GROUP_COLOR,groupColor);
+        db.update(TABLE_NAME, cv, KEY_GROUP_NAME + "= '" + groupName + "'", null);
     }
 
     public void updataAllAlarmData(int mSelectedHour,int mSelectedMinute,int alarm_state,String days,String labelText,String mRingtoneUri,int vibrate,int alarm_pending_req_code) {
@@ -323,6 +344,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.moveToFirst();
         return(c.getString(0));
     }
+
+    public int getGroupColor(String groupName) {
+
+        String selectQuery = "SELECT " + KEY_GROUP_COLOR
+                + " FROM " + TABLE_NAME +
+                " WHERE " + KEY_GROUP_NAME + " = " + "'" + groupName + "'" ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery,null);
+        c.moveToFirst();
+        return (c.getInt(0));
+
+    }
+
     /////////////////////////////////////////////////////////////////////////
     public void addDaysPendingReq(int request_code){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -381,5 +416,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }while (c.moveToNext());
         }
     }
+
 
 }

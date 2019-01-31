@@ -8,6 +8,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,19 +27,20 @@ public class AlarmReciever extends BroadcastReceiver {
     public static int request_id,batch_request_id;
     private static String ringtoneString;
     private static Uri ringtoneUri;
+    private static String mVibrate;
     @Override
     public void onReceive(Context context, Intent intent) {
         DatabaseHandler db = new DatabaseHandler(context);
         SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
-        batch_request_id = intent.getIntExtra("batch_request_code",-1);
+//        batch_request_id = intent.getIntExtra("batch_request_code",-1);
         request_id = intent.getIntExtra("request_code",-1);
 //        ringtoneString = intent.getStringExtra("ringtone");
 
-        if(batch_request_id!=-1){
-        ringtoneString = db.getRingtoneUri(request_id);}
-        if(ringtoneString!=null){
-            ringtoneUri = Uri.parse(ringtoneString);
+        String[] ringtoneVibrateString = db.getRingtoneUriVibrate(request_id);
+        if(ringtoneVibrateString[0]!=null){
+            ringtoneUri = Uri.parse(ringtoneVibrateString[0]);
         }
+
 
 
         Log.d("cx", "onReceive: "+request_id);

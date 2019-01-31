@@ -7,6 +7,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,9 +19,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -27,9 +31,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.cuboid.cuboidcirclebutton.CuboidButton;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 import com.rm.rmswitch.RMSwitch;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,11 +44,13 @@ import java.util.Calendar;
 public class EditAlarmActivity extends AppCompatActivity {
 
     String mRingtoneUri;
+    int mVibrate = 0;
     Uri currentRingtoneUri = null;
-    TextView alarmTime,groupNameTitle;
+    TextView alarmTime,groupNameTitle,repeatText,labelText,ringtoneText,vibrateText;
     EditText labelEdittext;
     RMSwitch rmSwitch1;
-    Button buttonMon,buttonTue,buttonWed,buttonThurs,buttonFri,buttonSat,buttonSun;
+    CardView buttonMon,buttonTue,buttonWed,buttonThurs,buttonFri,buttonSat,buttonSun,vibrateCard;
+    TextView textMon,textTue,textWed,textThurs,textFri,textSat,textSun;
     int groupColor,groupState;
     String groupName;
     private AlarmManager alarmMgr;
@@ -69,6 +78,16 @@ public class EditAlarmActivity extends AppCompatActivity {
         labelEdittext = findViewById(R.id.labelEdittext);
         rmSwitch1 = findViewById(R.id.rm_switch1);
         groupNameTitle = findViewById(R.id.group_name);
+        repeatText = findViewById(R.id.repeatText);
+        labelText = findViewById(R.id.labelText);
+        ringtoneText = findViewById(R.id.ringtoneText);
+        vibrateText = findViewById(R.id.vibrateText);
+        vibrateCard = findViewById(R.id.vibrateCard);
+
+
+
+
+        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Karla.ttf");
 //        Button[] bt = {buttonMon,buttonTue,buttonWed,buttonThurs,buttonFri,buttonSat,buttonSun};
 //        int[] buttonId = {R.id.buttonMon,R.id.buttonTue,R.id.buttonWed,R.id.buttonThurs,R.id.buttonFri,R.id.buttonSat,R.id.buttonSun};
 //        String[] stateOfDays = {stateMon,stateTue,stateWed,stateThurs,stateFri,stateSat,stateSun};
@@ -93,16 +112,33 @@ public class EditAlarmActivity extends AppCompatActivity {
         buttonSat = findViewById(R.id.buttonSat);
         buttonSun = findViewById(R.id.buttonSun);
 
+        textMon = findViewById(R.id.textMon);
+        textTue = findViewById(R.id.textTue);
+        textWed = findViewById(R.id.textWed);
+        textThurs = findViewById(R.id.textThurs);
+        textFri = findViewById(R.id.textFri);
+        textSat = findViewById(R.id.textSat);
+        textSun = findViewById(R.id.textSun);
+
+
+
+
         buttonMon.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
                 if (stateMon.equals("checked")){
                     stateMon = "unchecked";
-                    buttonMon.setBackgroundColor(R.color.white);
+                    buttonMon.setCardBackgroundColor(Color.WHITE);
+                    textMon.setTextColor(Color.BLACK);
+
                 }else{
                     stateMon = "checked";
-                    buttonMon.setBackgroundColor(R.color.fabBlue);
+                    buttonMon.setCardBackgroundColor(Color.rgb(30,89,246));
+                    textMon.setTextColor(Color.WHITE);
+
+
+
                 }
             }
         });
@@ -113,10 +149,12 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stateTue.equals("checked")){
                     stateTue = "unchecked";
-                    buttonTue.setBackgroundColor(R.color.white);
+                    buttonTue.setCardBackgroundColor(Color.WHITE);
+                    textTue.setTextColor(Color.BLACK);
                 }else{
                     stateTue = "checked";
-                    buttonTue.setBackgroundColor(R.color.fabBlue);
+                    buttonTue.setCardBackgroundColor(Color.rgb(30,89,246));
+                    textTue.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -127,11 +165,12 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stateWed.equals("checked")){
                     stateWed = "unchecked";
-                    buttonWed.setBackgroundColor(R.color.white);
+                    buttonWed.setCardBackgroundColor(Color.WHITE);
+                    textWed.setTextColor(Color.BLACK);
                 }else{
                     stateWed = "checked";
-                    buttonWed.setBackgroundColor(R.color.fabBlue);
-
+                    buttonWed.setCardBackgroundColor(Color.rgb(30,89,246));
+                    textWed.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -142,11 +181,12 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stateThurs.equals("checked")){
                     stateThurs = "unchecked";
-                    buttonThurs.setBackgroundColor(R.color.white);
+                    buttonThurs.setCardBackgroundColor(Color.WHITE);
+                    textThurs.setTextColor(Color.BLACK);
                 }else{
                     stateThurs = "checked";
-                    buttonThurs.setBackgroundColor(R.color.fabBlue);
-
+                    buttonThurs.setCardBackgroundColor(Color.rgb(30,89,246));
+                    textThurs.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -157,11 +197,12 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stateFri.equals("checked")){
                     stateFri = "unchecked";
-                    buttonFri.setBackgroundColor(R.color.white);
+                    buttonFri.setCardBackgroundColor(Color.WHITE);
+                    textFri.setTextColor(Color.BLACK);
                 }else{
                     stateFri = "checked";
-                    buttonFri.setBackgroundColor(R.color.fabBlue);
-
+                    buttonFri.setCardBackgroundColor(Color.rgb(30,89,246));
+                    textFri.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -173,11 +214,12 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stateSat.equals("checked")){
                     stateSat = "unchecked";
-                    buttonSat.setBackgroundColor(R.color.white);
+                    buttonSat.setCardBackgroundColor(Color.WHITE);
+                    textSat.setTextColor(Color.BLACK);
                 }else{
                     stateSat = "checked";
-                    buttonSat.setBackgroundColor(R.color.fabBlue);
-
+                    buttonSat.setCardBackgroundColor(Color.rgb(30,89,246));
+                    textSat.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -188,10 +230,12 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stateSun.equals("checked")){
                     stateSun = "unchecked";
-                    buttonSun.setBackgroundColor(R.color.white);
-                }else{
+                    buttonSun.setCardBackgroundColor(Color.WHITE);
+                    textSun.setTextColor(Color.BLACK);
+                }else {
                     stateSun = "checked";
-                    buttonSun.setBackgroundColor(R.color.fabBlue);
+                    buttonSun.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                    textSun.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -206,6 +250,7 @@ public class EditAlarmActivity extends AppCompatActivity {
         if(nameOfGroup!=null){
             groupNameTitle.setText(nameOfGroup);
             groupName = nameOfGroup;
+            groupColor = db.getGroupColor(nameOfGroup);
             // put groupColor and groupState here
         }
 
@@ -233,29 +278,59 @@ public class EditAlarmActivity extends AppCompatActivity {
                     Log.d("aaew", "onCreate: "+d+'\n');
                     if(d.equals("mon")){
                         stateMon = "checked";
-                        buttonMon.setBackgroundColor(R.color.fabBlue);
+                        buttonMon.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textMon.setTextColor(Color.WHITE);
                     }else if(d.equals("tue")){
                         stateTue = "checked";
-                        buttonTue.setBackgroundColor(R.color.fabBlue);
+                        buttonTue.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textTue.setTextColor(Color.WHITE);
                     }else if(d.equals("wed")){
                         stateWed = "checked";
-                        buttonWed.setBackgroundColor(R.color.fabBlue);
+                        buttonWed.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textWed.setTextColor(Color.WHITE);
                     }else if(d.equals("thurs")){
                         stateThurs = "checked";
-                        buttonThurs.setBackgroundColor(R.color.fabBlue);
+                        buttonThurs.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textThurs.setTextColor(Color.WHITE);
                     }else if(d.equals("fri")){
                         stateFri = "checked";
-                        buttonFri.setBackgroundColor(R.color.fabBlue);
+                        buttonFri.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textFri.setTextColor(Color.WHITE);
                     }else if(d.equals("sat")){
                         stateSat = "checked";
-                        buttonSat.setBackgroundColor(R.color.fabBlue);
+                        buttonSat.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textSat.setTextColor(Color.WHITE);
                     }else if(d.equals("sun")){
                         stateSun = "checked";
-                        buttonSun.setBackgroundColor(R.color.fabBlue);
+                        buttonSun.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                        textSun.setTextColor(Color.WHITE);
                     }
                 }
             }
+            if(allpreviousAlarmData[9].equals("1")){
+                vibrateCard.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                vibrateText.setTextColor(Color.WHITE);
+                mVibrate = 1;
+            }else{
+                mVibrate = 0;
+                //do nothing
+            }
         }
+
+        vibrateCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mVibrate==1){
+                    mVibrate = 0;
+                    vibrateCard.setCardBackgroundColor(Color.WHITE);
+                    vibrateText.setTextColor(Color.BLACK);
+                }else{
+                    mVibrate = 1;
+                    vibrateCard.setCardBackgroundColor(Color.rgb(30, 89, 246));
+                    vibrateText.setTextColor(Color.WHITE);
+                }
+            }
+        });
 
 ////        sqLiteDatabase.execSQL("drop table if exists alarmss");
 //        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS alarmss(hours int(2),minutes int(2),alarmState int(1),group_name VARCHAR(50),days VARCHAR(50),group_color int(20),group_state boolean,alarm_label text,ringtone_uri VARCHAR(256),vibrate boolean,alarm_pending_req_code int primary key)");
@@ -274,17 +349,34 @@ public class EditAlarmActivity extends AppCompatActivity {
         View view =getSupportActionBar().getCustomView();
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
-
 //        stateOfDays= {stateMon, stateTue, stateWed, stateThurs, stateFri, stateSat, stateSun};
 
+        Typeface tf1 = Typeface.createFromAsset(getAssets(),"fonts/Karla-Bold.ttf");
+        Typeface tf2 = Typeface.createFromAsset(getAssets(),"fonts/Karla.ttf");
+        alarmTime.setTypeface(tf1);
+        repeatText.setTypeface(tf1);
+        labelText.setTypeface(tf1);
+        groupNameTitle.setTypeface(tf);
+        ringtoneText.setTypeface(tf);
+        vibrateText.setTypeface(tf);
+        textMon.setTypeface(tf);
+        textTue.setTypeface(tf);
+        textWed.setTypeface(tf);
+        textThurs.setTypeface(tf);
+        textFri.setTypeface(tf);
+        textSat.setTypeface(tf);
+        textSun.setTypeface(tf);
+
+
     }
+
 
     public void ringtoneSelect(View view){
         RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
                 .Builder(EditAlarmActivity.this, getSupportFragmentManager())
 
                 .setTitle("Select ringtone")
-                .setCurrentRingtoneUri((currentRingtoneUri))
+                .setCurrentRingtoneUri(null)
                 .displayDefaultRingtone(true)
 
                 //Set true to allow user to select silent (i.e. No ringtone.).
@@ -376,7 +468,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 //                _alarm = calendar.getTimeInMillis() + (AlarmManager.INTERVAL_DAY+7);
 //            else
 //                _alarm = calendar.getTimeInMillis();
-            db.updataAllAlarmData(mSelectedHour, mSelectedMinute, 1, daystoRing, labelText, mRingtoneUri, 0, alarm_pending_req_code);
+            db.updataAllAlarmData(mSelectedHour, mSelectedMinute, 1, daystoRing, labelText, mRingtoneUri, mVibrate, alarm_pending_req_code);
 
             Log.d("CMS", "setAlarmOn: " + alarm_pending_req_code);
             alarmMgr = (AlarmManager) EditAlarmActivity.this.getSystemService(Context.ALARM_SERVICE);
@@ -544,7 +636,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                 currentTimeInMilliSeconds = -1 * currentTimeInMilliSeconds;
             }
 
-            Alarm a = new Alarm(mSelectedHour, mSelectedMinute, 1, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, 0, currentTimeInMilliSeconds);
+            Alarm a = new Alarm(mSelectedHour, mSelectedMinute, 1, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, mVibrate, currentTimeInMilliSeconds);
 //            db.addAlarm(a);
             Log.d("CMS", "setAlarmOn: " + currentTimeInMilliSeconds);
 
@@ -705,6 +797,8 @@ public class EditAlarmActivity extends AppCompatActivity {
 
 
         }
+
+
 
 
     }

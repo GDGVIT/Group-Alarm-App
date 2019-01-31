@@ -1,5 +1,6 @@
 package com.varunsaini.android.ga_basictransitions;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -117,7 +118,9 @@ public class AllAlarmRecyclerViewAdapter extends RecyclerView.Adapter<AllAlarmRe
             public void onClick(View v) {
                 Intent i = new Intent(context,EditAlarmActivity.class);
                 i.putExtra("alarm_pending_req_code",dd);
-                context.startActivity(i);
+                Activity activity = (Activity)context;
+                activity.startActivity(i);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 Toast.makeText(context, "CLicked on "+ dd , Toast.LENGTH_SHORT).show();
 
             }

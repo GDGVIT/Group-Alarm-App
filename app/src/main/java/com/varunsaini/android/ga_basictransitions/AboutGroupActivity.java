@@ -11,12 +11,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AlertDialogLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,19 +27,55 @@ public class AboutGroupActivity extends AppCompatActivity {
 //    tools:showIn="@layout/activity_about_group"
     AlarmManager alarmMgr;
     PendingIntent alarmIntent;
+
+    int mGroupColor = 0;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SQLiteDatabase sqLiteDatabase;
     DatabaseHandler db;
     EditText groupNameEditext;
-    String groupName;
+    static String groupName;
     String groupNameOnGroupOpen = "";
-
+    CardView colorPurple,colorGreen,colorPink;
+    LinearLayout fullCardLinLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_group);
+
+        colorPurple = findViewById(R.id.colorPurple);
+        colorGreen = findViewById(R.id.colorGreen);
+        colorPink = findViewById(R.id.colorPink);
+        fullCardLinLayout = findViewById(R.id.full_card_lin_layout);
+
+        colorPurple.setPreventCornerOverlap(false);
+        colorGreen.setPreventCornerOverlap(false);
+        colorPink.setPreventCornerOverlap(false);
+
+        colorPurple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCardBackgroundGradient(1);
+                mGroupColor = 1;
+            }
+        });
+
+        colorGreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCardBackgroundGradient(2);
+                mGroupColor = 2;
+            }
+        });
+
+        colorPink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCardBackgroundGradient(3);
+                mGroupColor = 3;
+            }
+        });
 
 
         db = new DatabaseHandler(this);
@@ -55,6 +93,9 @@ public class AboutGroupActivity extends AppCompatActivity {
         if (groupName!=null){
             groupNameEditext.setText(groupName);
             groupNameOnGroupOpen = groupName;
+            mGroupColor = db.getGroupColor(groupName);
+            int groupColor = db.getGroupColor(groupName);
+            setCardBackgroundGradient(groupColor);
             ArrayList<GroupInfo> groupInfoArrayList = db.getAllGroupInfo(groupName);
             recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_all_alarms_in_a_group);
             recyclerView.setHasFixedSize(true);
@@ -65,20 +106,20 @@ public class AboutGroupActivity extends AppCompatActivity {
             recyclerView.setAdapter(new AboutGroupRecyclerViewAdapter(groupInfoArrayList));
             recyclerView.setHasFixedSize(true);
             recyclerView.setItemViewCacheSize(20);
-            recyclerView.setDrawingCacheEnabled(true);
-            recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         }
 
     }
 
     public void editAlarm(View v){
+        db.changeGroupColor(groupName,mGroupColor);
         Intent i= new Intent(AboutGroupActivity.this, EditAlarmActivity.class);
         startActivity(i);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     public void newAlarm(View view) {
+        db.changeGroupColor(groupName,mGroupColor);
         ArrayList<String> allGroupNames = db.getAllGroupNames();
         allGroupNames.remove(groupName);
         String editText = groupNameEditext.getText().toString();
@@ -113,6 +154,7 @@ public class AboutGroupActivity extends AppCompatActivity {
             }
         }
         if(!editText.equals("") && groupNameFoundInDatabase == 0) {
+            db.changeGroupColor(groupName,mGroupColor);
             db.changeGroupName(groupName, editText);
             startActivity(new Intent(this, GroupActivity.class));
         }else if(editText.equals("") && !groupNameOnGroupOpen.equals("")){
@@ -121,6 +163,24 @@ public class AboutGroupActivity extends AppCompatActivity {
             Toast.makeText(this, "Group Name Already Exists", Toast.LENGTH_SHORT).show();
         }else if(groupNameOnGroupOpen.equals("")){
             startActivity(new Intent(this, GroupActivity.class));
+        }
+    }
+
+    void setCardBackgroundGradient(int groupColor){
+        if(groupColor==1){
+            fullCardLinLayout.setBackgroundResource(R.drawable.list_grad_purple);
+        }else if(groupColor==2){
+            fullCardLinLayout.setBackgroundResource(R.drawable.list_grad_green);
+        }else if(groupColor==3){
+            fullCardLinLayout.setBackgroundResource(R.drawable.list_grad_pink);
+        }else if(groupColor==4){
+
+        }else if(groupColor==5){
+
+        }else if(groupColor==6){
+
+        }else if(groupColor==7){
+
         }
     }
 

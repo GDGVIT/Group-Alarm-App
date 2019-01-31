@@ -1,10 +1,12 @@
 package com.varunsaini.android.ga_basictransitions;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -20,11 +22,15 @@ import com.rm.rmswitch.RMSwitch;
 
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGroupRecyclerViewAdapter.AboutGroupRecyclerViewHolder> {
 
     ArrayList<GroupInfo> s;
     AssetManager assetManager;
     Context context;
+    SQLiteDatabase sqLiteDatabase;
+    DatabaseHandler db;
 
     public AboutGroupRecyclerViewAdapter(ArrayList<GroupInfo> s){
         this.s = s;
@@ -38,6 +44,7 @@ public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGro
         assetManager = viewGroup.getContext().getAssets();
         context = viewGroup.getContext();
 
+
         return new AboutGroupRecyclerViewHolder(view);
     }
 
@@ -47,6 +54,9 @@ public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGro
         final String aa = s.get(i).time;
         int bb = s.get(i).alarm_state;
         final int cc = s.get(i).alarm_pending_req_code;
+
+        db = new DatabaseHandler(context);
+        sqLiteDatabase = context.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
 
         aboutGroupRecyclerViewHolder.time.setText(aa);
         Typeface tf = Typeface.createFromAsset(assetManager,"fonts/Karla-Bold.ttf");
@@ -81,7 +91,10 @@ public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGro
             public void onClick(View v) {
                 Intent i = new Intent(context,EditAlarmActivity.class);
                 i.putExtra("alarm_pending_req_code",cc);
-                context.startActivity(i);
+                Activity activity = (Activity) context;
+                db.changeGroupColor(AboutGroupActivity.groupName,db.getGroupColor(AboutGroupActivity.groupName));
+                activity.startActivity(i);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 Toast.makeText(context, "CLicked on "+ cc , Toast.LENGTH_SHORT).show();
 
             }
@@ -90,17 +103,31 @@ public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGro
         aboutGroupRecyclerViewHolder.allCard.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+//                DatabaseHandler db = new DatabaseHandler(context);
+//                db.deleteAnAlarm(cc);
+//
+//                AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+//                Intent intent = new Intent(context, AlarmReciever.class);
+//                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, cc, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                Log.d("dismissAlarm", "dismissAlarm: "+AlarmReciever.request_id);
+//                alarmMgr.cancel(alarmIntent);
+//
+//                s.remove(i);
+//                notifyItemRemoved(i);
+//                return true;
+
                 DatabaseHandler db = new DatabaseHandler(context);
-                db.deleteAnAlarm(cc);
-
-                AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(context, AlarmReciever.class);
-                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, cc, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                Log.d("dismissAlarm", "dismissAlarm: "+AlarmReciever.request_id);
-                alarmMgr.cancel(alarmIntent);
-
-                s.remove(i);
-                notifyItemRemoved(i);
+                AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                db.deleteAnAlarm(cc);
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(cc).substring(0,7)));
+                for(Integer i : integerArrayList) {
+                    PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmMgr.cancel(alarmIntent);
+                }
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(cc).substring(0,7)));
+                s.remove(aboutGroupRecyclerViewHolder.getAdapterPosition());
+                notifyItemRemoved(aboutGroupRecyclerViewHolder.getAdapterPosition());
                 return true;
 
             }

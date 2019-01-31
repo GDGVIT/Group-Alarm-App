@@ -7,31 +7,63 @@
     tools:context=".GroupActivity">
 
     <!--<android.support.design.widget.AppBarLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?attr/actionBarSize"-->
-            <!--android:background="#ffffff"-->
-            <!--app:titleTextColor="@color/colorAccent"-->
-            <!--app:popupTheme="@style/AppTheme.PopupOverlay" >-->
-        <!--</android.support.v7.widget.Toolbar>-->
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/toolbar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?attr/actionBarSize"-->
+    <!--android:background="#ffffff"-->
+    <!--app:titleTextColor="@color/colorAccent"-->
+    <!--app:popupTheme="@style/AppTheme.PopupOverlay" >-->
+    <!--</android.support.v7.widget.Toolbar>-->
 
     <!--</android.support.design.widget.AppBarLayout>-->
 
     <include layout="@layout/content_group" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:onClick="addGroup"
-        app:backgroundTint="@color/fabBlue"
+        android:id="@+id/fabAddGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="@dimen/fab_margin"
+        android:onClick="addGroup"
+        android:visibility="visible"
+        app:backgroundTint="@color/fabBlue"
         app:srcCompat="@drawable/baseline_add_white_18dp" />
+
+    <LinearLayout
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabDeleteGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:onClick="addGroup"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="12dp"
+            android:visibility="invisible"
+            app:backgroundTint="@color/fabBlue"
+            app:srcCompat="@drawable/baseline_add_white_18dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:onClick="addGroup"
+            android:layout_marginBottom="16dp"
+            android:visibility="invisible"
+            app:backgroundTint="@color/fabBlue"
+            app:srcCompat="@drawable/baseline_add_white_18dp" />
+
+    </LinearLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

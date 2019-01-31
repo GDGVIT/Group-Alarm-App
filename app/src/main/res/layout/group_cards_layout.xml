@@ -8,11 +8,14 @@
     android:layout_marginLeft="24dp"
     android:layout_marginRight="24dp"
     app:cardCornerRadius="9dp"
-    app:cardElevation="10dp"
+    app:cardElevation="5dp"
+    android:clickable="true"
+    android:focusable="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--Adding linear layout to add gradint color-->
     <LinearLayout
+        android:id="@+id/groupColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/list_grad_purple">

@@ -6,12 +6,14 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,6 +34,7 @@ public class AlarmRingActivity extends AppCompatActivity {
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
     Calendar calendar;
+    Vibrator v;
     GestureDetector mGestureDetector;
     TextView actionButton,snooozeText,cancelText;
 
@@ -44,6 +47,18 @@ public class AlarmRingActivity extends AppCompatActivity {
         actionButton = findViewById(R.id.action_button);
         snooozeText = findViewById(R.id.snoozeText);
         cancelText = findViewById(R.id.cancelText);
+
+        DatabaseHandler db = new DatabaseHandler(this);
+        SQLiteDatabase sqLiteDatabase = this.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
+
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        String[] ringtoneVibrateString = db.getRingtoneUriVibrate(AlarmReciever.request_id);
+        if(ringtoneVibrateString[1]!=null){
+            if(ringtoneVibrateString[1].equals("1")){
+                long[] pattern = {0, 100, 1000};
+                v.vibrate(pattern, 0);}
+        }
 
         mGestureDetector = new GestureDetector(this,new MyGestureListener());
 
@@ -73,10 +88,12 @@ public class AlarmRingActivity extends AppCompatActivity {
         AlarmReciever ar = new AlarmReciever();
         if (AlarmReciever.r.isPlaying()) {
             AlarmReciever.r.stop();
+
         }
+        v.cancel();
         alarmMgr.cancel(alarmIntent);
         finishAndRemoveTask();
-
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
         Log.d("HH", "snoozeAlarm: after cancel alarm");
         AlarmManager alarmMgr1 = (AlarmManager)AlarmRingActivity.this.getSystemService(Context.ALARM_SERVICE);
 
@@ -96,6 +113,7 @@ public class AlarmRingActivity extends AppCompatActivity {
         if (AlarmReciever.r.isPlaying()) {
             AlarmReciever.r.stop();
         }
+        v.cancel();
         alarmMgr.cancel(alarmIntent);
         AlarmManager alarmMgr1 = (AlarmManager)AlarmRingActivity.this.getSystemService(Context.ALARM_SERVICE);
 
@@ -103,6 +121,8 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (7*24*60*60*1000), alarmIntent1);
         finishAndRemoveTask();
+        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+
     }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

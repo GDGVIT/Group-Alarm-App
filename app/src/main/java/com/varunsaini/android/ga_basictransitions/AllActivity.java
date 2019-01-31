@@ -131,6 +131,7 @@ public class AllActivity extends AppCompatActivity {
         Intent i = new Intent(AllActivity.this,EditAlarmActivity.class);
         i.putExtra("belongs_to_group",0);
         startActivity(i);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
     }
 
