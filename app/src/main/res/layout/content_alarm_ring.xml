@@ -53,13 +53,37 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="64dp"/>
 
+    <ImageView
+        android:layout_marginTop="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_drop_up_white_18dp"
+        android:layout_gravity="center_horizontal"/>
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_drop_up_white_18dp"
+        android:layout_gravity="center_horizontal"/>
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_drop_up_white_18dp"
+        android:layout_gravity="center_horizontal"/>
+    <ImageView
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_drop_up_white_18dp"
+        android:layout_gravity="center_horizontal"/>
+
     <TextView
         android:id="@+id/action_button"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="200dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@color/white"
+        android:layout_marginBottom="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/circle_white_textview"
         android:layout_gravity="center"/>
 
     <TextView

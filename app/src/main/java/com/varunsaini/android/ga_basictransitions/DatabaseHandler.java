@@ -137,11 +137,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public String[] getRingtoneUriVibrate(int request_id){
 
         String[] array = new String[2];
-        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(0,7));
+        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(3,9));
         Log.d("jk", "getRingtoneUri: "+idd);
 
         String requestQuery = "SELECT "+ KEY_RINGTONE_NAME + " , " + KEY_VIBRATE + " FROM " +
-                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + " LIKE '"+idd + "%'";
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + " LIKE '%"+idd + "%'";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(requestQuery, null);
         Log.d("sas", "getRingtoneUri: "+requestQuery);
@@ -244,6 +244,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAnAlarm(int request_code){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME,KEY_ALARM_PENDING_REQ_CODE + "=" + request_code,null);
+    }
+
+    public void deleteAGroup(String groupName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME,KEY_GROUP_NAME + "= '" + groupName + "'",null);
     }
 
     public ArrayList<String> getAllGroupNames(){
@@ -369,7 +374,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void removeDaysPendingReq(int request_code){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(DAYS_TABLE_NAME,KEY_DAYS_REQUEST_CODE+ " like " + "'" + request_code + "%'",null);
+        db.delete(DAYS_TABLE_NAME,KEY_DAYS_REQUEST_CODE+ " like " + "'%" + request_code + "%'",null);
     }
 
     public ArrayList<Integer> getAllDaysIntents(){
@@ -391,7 +396,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<Integer> getThisAlarmIntents(int request_code){
 
         ArrayList<Integer> array = new ArrayList<>();
-        String selectQuery = "SELECT * " + " FROM " + DAYS_TABLE_NAME + " WHERE "+ KEY_DAYS_REQUEST_CODE+ " LIKE " + "'" + request_code + "%'";
+        String selectQuery = "SELECT * " + " FROM " + DAYS_TABLE_NAME + " WHERE "+ KEY_DAYS_REQUEST_CODE+ " LIKE " + "'%" + request_code + "%'";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);
         if(c!=null && c.moveToFirst()){

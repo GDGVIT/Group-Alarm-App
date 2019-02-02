@@ -97,7 +97,7 @@ public class AllAlarmRecyclerViewAdapter extends RecyclerView.Adapter<AllAlarmRe
                 DatabaseHandler db = new DatabaseHandler(context);
                 if (allAlarmRecyclerViewHolder.rmsSwitch.isChecked()){
                     allAlarmRecyclerViewHolder.rmsSwitch.toggle();
-                    ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(dd).substring(0,7)));
+                    ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(dd).substring(3,9)));
                     for(Integer i : integerArrayList) {
                         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         alarmMgr.cancel(alarmIntent);
@@ -133,12 +133,12 @@ public class AllAlarmRecyclerViewAdapter extends RecyclerView.Adapter<AllAlarmRe
                 Intent intent = new Intent(context, AlarmReciever.class);
                 alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                 db.deleteAnAlarm(dd);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(dd).substring(0,7)));
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(dd).substring(3,9)));
                 for(Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
                 }
-                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(dd).substring(0,7)));
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(dd).substring(3,9)));
 //                AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 //                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, dd, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 //                Log.d("dismissAlarm", "dismissAlarm: "+AlarmReciever.request_id);

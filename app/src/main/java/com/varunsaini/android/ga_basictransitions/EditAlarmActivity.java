@@ -250,7 +250,7 @@ public class EditAlarmActivity extends AppCompatActivity {
         if(nameOfGroup!=null){
             groupNameTitle.setText(nameOfGroup);
             groupName = nameOfGroup;
-            groupColor = db.getGroupColor(nameOfGroup);
+            groupColor = getIntent().getIntExtra("colorOfGroup",-1);
             // put groupColor and groupState here
         }
 
@@ -483,7 +483,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                 int k = 0;
 
                 alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(0,7)));
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
                 for(Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(this, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
@@ -492,7 +492,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                 for (String d : dayys) {
                     if (d.equals("mon")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "111");
+                        int y = Integer.valueOf("111"+x.substring(3,9) );
                         calendar.set(Calendar.DAY_OF_WEEK, 2);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -508,7 +508,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("tue")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "222");
+                        int y = Integer.valueOf("222"+x.substring(3,9) );
                         calendar.set(Calendar.DAY_OF_WEEK, 3);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -524,7 +524,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("wed")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "333");
+                        int y = Integer.valueOf("333" + x.substring(3,9) );
                         calendar.set(Calendar.DAY_OF_WEEK, 4);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -538,7 +538,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("thurs")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "444");
+                        int y = Integer.valueOf("444"  + x.substring(3,9));
                         calendar.set(Calendar.DAY_OF_WEEK, 5);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -554,7 +554,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("fri")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "555");
+                        int y = Integer.valueOf("555" + x.substring(3,9));
                         calendar.set(Calendar.DAY_OF_WEEK, 6);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -568,7 +568,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("sat")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "666");
+                        int y = Integer.valueOf("666" + x.substring(3,9));
                         calendar.set(Calendar.DAY_OF_WEEK, 7);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -582,7 +582,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("sun")) {
                         String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf(x.substring(0,7) + "777");
+                        int y = Integer.valueOf("777" + x.substring(3,9));
                         calendar.set(Calendar.DAY_OF_WEEK, 1);
                         Log.d("xzx", "setAlarmOn: "+y);
                         intent.putExtra("request_code", y);
@@ -603,12 +603,12 @@ public class EditAlarmActivity extends AppCompatActivity {
 
                 //remove pending intents
 //                alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(0,7)));
+//                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
 //                for(Integer i : integerArrayList) {
 //                    PendingIntent alarmIntent = PendingIntent.getBroadcast(this, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
 //                    alarmMgr.cancel(alarmIntent);
 //                }
-                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(0,7)));
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
                 for(int i=0;i<dayys.length;i++){
                     db.addDaysPendingReq(allRequests[i]);
                 }
@@ -652,7 +652,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                 for (String d : dayys) {
                     if (d.equals("mon")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "111");
+                        int y = Integer.valueOf("111"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 2);
                         Log.d("xzx", "setAlarmOn: "+y);
@@ -671,7 +671,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         Log.d("kkl", "setAlarmOn: "+"Alarm Mon End");
                     } else if (d.equals("tue")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "222");
+                        int y = Integer.valueOf("222"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 3);
                         Log.d("xzx", "setAlarmOn: "+y);
@@ -690,7 +690,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("wed")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "333");
+                        int y = Integer.valueOf("333"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 4);
                         Log.d("xzx", "setAlarmOn: "+y);
@@ -704,7 +704,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("thurs")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "444");
+                        int y = Integer.valueOf("444"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 5);
                         Log.d("xzx", "setAlarmOn: "+y);
@@ -720,7 +720,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("fri")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "555");
+                        int y = Integer.valueOf("555"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 6);
                         Log.d("xzx", "setAlarmOn: "+y);
@@ -734,7 +734,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("sat")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "666");
+                        int y = Integer.valueOf("666"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 7);
                         Log.d("xzx", "setAlarmOn: "+y);
@@ -748,7 +748,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                         k++;
                     } else if (d.equals("sun")) {
                         String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf(x.substring(0,7) + "777");
+                        int y = Integer.valueOf("777"+x.substring(3,9));
                         db.addDaysPendingReq(y);
                         calendar.set(Calendar.DAY_OF_WEEK, 1);
                         Log.d("xzx", "setAlarmOn: "+y);

@@ -28,7 +28,7 @@ public class AboutGroupActivity extends AppCompatActivity {
     AlarmManager alarmMgr;
     PendingIntent alarmIntent;
 
-    int mGroupColor = 0;
+    int mGroupColor = 1;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     SQLiteDatabase sqLiteDatabase;
@@ -132,6 +132,7 @@ public class AboutGroupActivity extends AppCompatActivity {
         if(!editText.equals("") && groupNameFoundInDatabase==0){
             Intent i= new Intent(AboutGroupActivity.this, EditAlarmActivity.class);
             i.putExtra("nameOfGroup",groupNameEditext.getText().toString());
+            i.putExtra("colorOfGroup",mGroupColor);
             startActivity(i);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }else if(editText.equals("")){

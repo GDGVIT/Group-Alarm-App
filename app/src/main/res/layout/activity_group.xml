@@ -45,23 +45,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:onClick="addGroup"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="12dp"
+            android:onClick="deleteSelected"
             android:visibility="invisible"
             app:backgroundTint="@color/fabBlue"
-            app:srcCompat="@drawable/baseline_add_white_18dp" />
+            app:srcCompat="@drawable/bin" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:onClick="addGroup"
+            android:onClick="cancelSelected"
             android:layout_marginBottom="16dp"
             android:visibility="invisible"
-            app:backgroundTint="@color/fabBlue"
-            app:srcCompat="@drawable/baseline_add_white_18dp" />
+            app:backgroundTint="@color/selectedGroupGray"
+            app:srcCompat="@drawable/cross"/>
 
     </LinearLayout>
 

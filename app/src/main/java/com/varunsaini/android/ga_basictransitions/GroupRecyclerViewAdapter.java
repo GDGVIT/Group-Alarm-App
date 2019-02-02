@@ -30,7 +30,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     ArrayList<Group> s;
     AssetManager assetManager;
     Context context;
-    boolean atLeastOneSelected = false;
+    public boolean atLeastOneSelected = false;
     int numberOfGroupsSelected = 0;
 
     public GroupRecyclerViewAdapter(ArrayList<Group> s){
@@ -197,6 +197,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
                 model.setSelected(true);
                 numberOfGroupsSelected++;
                 groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
+
 
 //                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
                 return true;

@@ -24,6 +24,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ import java.util.Calendar;
 
 public class AlarmRingActivity extends AppCompatActivity {
 
+    private static final int NUM_REPEATS = 1000;
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
     Calendar calendar;
@@ -47,6 +50,12 @@ public class AlarmRingActivity extends AppCompatActivity {
         actionButton = findViewById(R.id.action_button);
         snooozeText = findViewById(R.id.snoozeText);
         cancelText = findViewById(R.id.cancelText);
+
+        AlphaAnimation anim = new AlphaAnimation(1.0f, 0.4f);
+        anim.setDuration(500);
+        anim.setRepeatCount(NUM_REPEATS);
+        anim.setRepeatMode(Animation.REVERSE);
+        actionButton.startAnimation(anim);
 
         DatabaseHandler db = new DatabaseHandler(this);
         SQLiteDatabase sqLiteDatabase = this.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);

@@ -14,5 +14,5 @@
     <color name="green_grad_end">#47ddba</color>
     <color name="pink_grad_start">#ff3683</color>
     <color name="pink_grad_end">#ff7685</color>
-    <color name="selectedGroupGray">#808080</color>
+    <color name="selectedGroupGray">#909090</color>
 </resources>

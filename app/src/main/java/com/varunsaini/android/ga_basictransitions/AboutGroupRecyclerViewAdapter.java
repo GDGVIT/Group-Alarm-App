@@ -120,12 +120,12 @@ public class AboutGroupRecyclerViewAdapter extends RecyclerView.Adapter<AboutGro
                 Intent intent = new Intent(context, AlarmReciever.class);
                 AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
                 db.deleteAnAlarm(cc);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(cc).substring(0,7)));
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(cc).substring(3,9)));
                 for(Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
                 }
-                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(cc).substring(0,7)));
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(cc).substring(3,9)));
                 s.remove(aboutGroupRecyclerViewHolder.getAdapterPosition());
                 notifyItemRemoved(aboutGroupRecyclerViewHolder.getAdapterPosition());
                 return true;
