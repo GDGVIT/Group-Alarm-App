@@ -162,8 +162,6 @@ public class GroupActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = (new Intent(GroupActivity.this,AllActivity.class));
-//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
@@ -233,23 +231,27 @@ public class GroupActivity extends AppCompatActivity {
             }
             
             fabCancel.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("RestrictedApi")
                 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(GroupActivity.this, "Cancel Clicked", Toast.LENGTH_SHORT).show();
-                    for(int i=0;i<intString.size();i++){
                         Log.d("hjh", "onClick: "+intString.get(i));
                         Log.d("hjhjjj", "onClick: "+s.get(intString.get(i)).groupColor);
-                        numberOfGroupsSelected--;
+                        numberOfGroupsSelected= 0;
                         finish();
                         startActivity(getIntent());
                         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         atLeastOneSelected=false;
-                    }
+                    fabDeleteGroup.setVisibility(View.GONE);
+                    fabCancel.setVisibility(View.GONE);
+                    fabAddGroup.setVisibility(View.VISIBLE);
+
                 }
             });
 
             fabDeleteGroup.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("RestrictedApi")
                 @Override
                 public void onClick(View v) {
                     DatabaseHandler db = new DatabaseHandler(context);
@@ -275,7 +277,9 @@ public class GroupActivity extends AppCompatActivity {
                         notifyItemRemoved(intString.get(i));
 //                        notifyDataSetChanged();
                     }
-
+                    fabDeleteGroup.setVisibility(View.GONE);
+                    fabCancel.setVisibility(View.GONE);
+                    fabAddGroup.setVisibility(View.VISIBLE);
 
                 }
             });

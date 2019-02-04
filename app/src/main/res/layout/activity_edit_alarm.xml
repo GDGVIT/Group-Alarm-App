@@ -22,15 +22,15 @@
 
     <include layout="@layout/content_edit_alarm" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:onClick="setAlarmOn"
-        android:id="@+id/fab"
-        app:backgroundTint="@color/fabBlue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:src="@drawable/baseline_alarm_on_white_18dp"
-         />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:onClick="setAlarmOn"-->
+        <!--android:id="@+id/fab"-->
+        <!--app:backgroundTint="@color/fabBlue"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="32dp"-->
+        <!--android:layout_gravity="center_horizontal|bottom"-->
+        <!--android:src="@drawable/baseline_alarm_on_white_18dp"-->
+         <!--/>-->
 
 </android.support.design.widget.CoordinatorLayout>

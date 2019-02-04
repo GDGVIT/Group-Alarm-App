@@ -19,8 +19,7 @@
 
     <style name="CustomTheme" parent="Theme.AppCompat.Light">
         <item name="android:actionBarDivider">@android:color/transparent</item>
-        <item name="android:actionBarSize">69dp</item>
-        <item name="actionBarSize">69dp</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetEnd">0dp</item>
     </style>

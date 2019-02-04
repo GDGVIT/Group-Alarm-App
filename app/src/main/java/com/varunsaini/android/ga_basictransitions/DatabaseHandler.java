@@ -91,7 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public ArrayList<AllAlarm> getAllActivtiyAlarmList(){
         String selectQuery = "SELECT " + KEY_HOUR +","+ KEY_MINUTE +","+ KEY_GROUP_NAME
-                +","+ KEY_ALARM_STATE +"," + KEY_ALARM_PENDING_REQ_CODE + "," + KEY_GROUP_COLOR + " FROM " + TABLE_NAME;
+                +","+ KEY_ALARM_STATE +"," + KEY_ALARM_PENDING_REQ_CODE + "," + KEY_GROUP_COLOR + "," + KEY_DAYS + " FROM " + TABLE_NAME + " ORDER BY " + KEY_HOUR +","+ KEY_MINUTE ;
 
 //        String selectQuery = "SELECT hour,minute,group_name,alarm_state from alarm";
         ArrayList<AllAlarm> allAlarmArrayList = new ArrayList<>();
@@ -104,6 +104,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int groupName = c.getColumnIndex(KEY_GROUP_NAME);
         int alarmState = c.getColumnIndex(KEY_ALARM_STATE);
         int alarmPendingReqCode = c.getColumnIndex(KEY_ALARM_PENDING_REQ_CODE);
+        int days = c.getColumnIndex(KEY_DAYS);
 
         if (c != null && c.moveToFirst()){
             do {
@@ -112,7 +113,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 String groupNamee = c.getString(groupName);
                 int alarmStatee = c.getInt(alarmState);
                 int alarmPendingReqCodee = c.getInt(alarmPendingReqCode);
-                allAlarmArrayList.add(new AllAlarm(time,groupNamee,alarmStatee,alarmPendingReqCodee));
+                String dayss = c.getString(days);
+                allAlarmArrayList.add(new AllAlarm(time,groupNamee,alarmStatee,alarmPendingReqCodee,false,dayss));
             } while (c.moveToNext());
         }
         return allAlarmArrayList;
@@ -137,6 +139,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public String[] getRingtoneUriVibrate(int request_id){
 
         String[] array = new String[2];
+
         Integer idd = Integer.parseInt(String.valueOf(request_id).substring(3,9));
         Log.d("jk", "getRingtoneUri: "+idd);
 
@@ -189,7 +192,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public ArrayList<Group> getGroupActivityGroupList(){
         String selectQuery = "SELECT DISTINCT " + KEY_GROUP_NAME + " , " + KEY_GROUP_COLOR + " FROM " + TABLE_NAME +
-                                " WHERE " + KEY_GROUP_NAME + " NOT NULL " ;
+                                " WHERE " + KEY_GROUP_NAME + " NOT NULL " +" ORDER BY " + KEY_GROUP_NAME ;
         ArrayList<Group> groupArrayList = new ArrayList<>();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -210,7 +213,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 String getGroupName = c.getString(groupName);
                 String selectQuery1 = "SELECT " + KEY_HOUR + " , " + KEY_MINUTE +
                         " FROM " + TABLE_NAME +
-                        " WHERE " + KEY_GROUP_NAME + " LIKE " + "'" + getGroupName + "'";
+                        " WHERE " + KEY_GROUP_NAME + " LIKE " + "'" + getGroupName + "'"  +  " ORDER BY " + KEY_HOUR + " , " + KEY_MINUTE  ;
                 Cursor c1 = db.rawQuery(selectQuery1,null);
                 int i=0;
                 if(c1 != null && c1.moveToFirst()){
@@ -301,7 +304,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<GroupInfo> groupInfoArrayList = new ArrayList<>();
         String selectQuery = "SELECT " + KEY_HOUR + "," + KEY_MINUTE + "," + KEY_ALARM_STATE + "," + KEY_ALARM_PENDING_REQ_CODE
                 + " FROM " + TABLE_NAME +
-                " WHERE " + KEY_GROUP_NAME + " = " + "'" + groupName + "'" ;
+                " WHERE " + KEY_GROUP_NAME + " = " + "'" + groupName + "'" + " ORDER BY " +  KEY_HOUR + "," + KEY_MINUTE ;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery,null);

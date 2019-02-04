@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".AboutGroupActivity">
 
@@ -41,24 +43,27 @@
                     android:layout_weight="1"
                     android:hint="Group Name"
                     android:textColor="@color/white"
-                    android:textSize="31sp"
+                    android:textSize="28sp"
                     android:textStyle="bold" />
 
-                <com.rm.rmswitch.RMSwitch
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="14dp"
-                    android:layout_gravity="center_vertical"
-                    app:checked="true"
-                    app:enabled="true"
-                    app:forceAspectRatio="false"
-                    app:switchBkgCheckedColor="#40000000"
-                    app:switchBkgNotCheckedColor="#40000000"
-                    app:switchDesign="android"
-                    app:switchToggleCheckedColor="#ffffff"
-                    app:switchToggleNotCheckedColor="#000000" />
+                <!--<com.rm.rmswitch.RMSwitch-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginRight="14dp"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--app:checked="true"-->
+                    <!--app:enabled="true"-->
+                    <!--app:forceAspectRatio="false"-->
+                    <!--app:switchBkgCheckedColor="#40000000"-->
+                    <!--app:switchBkgNotCheckedColor="#40000000"-->
+                    <!--app:switchDesign="android"-->
+                    <!--app:switchToggleCheckedColor="#ffffff"-->
+                    <!--app:switchToggleNotCheckedColor="#000000" />-->
             </LinearLayout>
 
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <LinearLayout
 
                 android:layout_marginTop="4dp"
@@ -157,6 +162,7 @@
                     app:cardElevation="10dp"
                     android:layout_marginRight="7dp"/>
             </LinearLayout>
+            </HorizontalScrollView>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_recycler_view_all_alarms_in_a_group"

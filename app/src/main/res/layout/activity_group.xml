@@ -47,7 +47,6 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="12dp"
-            android:onClick="deleteSelected"
             android:visibility="invisible"
             app:backgroundTint="@color/fabBlue"
             app:srcCompat="@drawable/bin" />
@@ -57,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:onClick="cancelSelected"
             android:layout_marginBottom="16dp"
             android:visibility="invisible"
             app:backgroundTint="@color/selectedGroupGray"

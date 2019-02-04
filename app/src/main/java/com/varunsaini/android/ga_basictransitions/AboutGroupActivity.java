@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,7 +19,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -38,6 +41,8 @@ public class AboutGroupActivity extends AppCompatActivity {
     String groupNameOnGroupOpen = "";
     CardView colorPurple,colorGreen,colorPink;
     LinearLayout fullCardLinLayout;
+    TextView titleActionBar;
+    ImageView backActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +90,23 @@ public class AboutGroupActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
+        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
         View view = getSupportActionBar().getCustomView();
+
+        backActionBar = view.findViewById(R.id.backActionBar);
+        titleActionBar = view.findViewById(R.id.titleActionBar);
+
+        Typeface tf1 = Typeface.createFromAsset(getAssets(),"fonts/Karla-Bold.ttf");
+        titleActionBar.setTypeface(tf1);
+        titleActionBar.setText("Manage Group");
+
+        backActionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AboutGroupActivity.super.onBackPressed();
+            }
+        });
+
 
         groupNameEditext = findViewById(R.id.group_name);
         groupName = getIntent().getStringExtra("groupName");
@@ -129,7 +149,7 @@ public class AboutGroupActivity extends AppCompatActivity {
                 groupNameFoundInDatabase = 1;
             }
         }
-        if(!editText.equals("") && groupNameFoundInDatabase==0){
+        if(!editText.equals("") && groupNameFoundInDatabase==0 && (!editText.contains("'")||!editText.contains("'")||!editText.contains(""))){
             Intent i= new Intent(AboutGroupActivity.this, EditAlarmActivity.class);
             i.putExtra("nameOfGroup",groupNameEditext.getText().toString());
             i.putExtra("colorOfGroup",mGroupColor);
@@ -139,12 +159,15 @@ public class AboutGroupActivity extends AppCompatActivity {
             Toast.makeText(this, "Give a Group Name first", Toast.LENGTH_SHORT).show();
         }else if(groupNameFoundInDatabase==1){
             Toast.makeText(this, "Group Name Already Exists", Toast.LENGTH_SHORT).show();
+        }else if(editText.contains("'")||editText.contains("'")||editText.contains("")){
+            Toast.makeText(this, "Group name can't contain Special Characters", Toast.LENGTH_SHORT).show();
         }
 
     }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         int groupNameFoundInDatabase = 0;
         String editText = groupNameEditext.getText().toString();
         ArrayList<String> allGroupNames = db.getAllGroupNames();
@@ -154,7 +177,7 @@ public class AboutGroupActivity extends AppCompatActivity {
                 groupNameFoundInDatabase = 1;
             }
         }
-        if(!editText.equals("") && groupNameFoundInDatabase == 0) {
+        if(!editText.equals("") && groupNameFoundInDatabase == 0 && (!editText.contains("'")||!editText.contains(""))) {
             db.changeGroupColor(groupName,mGroupColor);
             db.changeGroupName(groupName, editText);
             startActivity(new Intent(this, GroupActivity.class));
@@ -164,6 +187,8 @@ public class AboutGroupActivity extends AppCompatActivity {
             Toast.makeText(this, "Group Name Already Exists", Toast.LENGTH_SHORT).show();
         }else if(groupNameOnGroupOpen.equals("")){
             startActivity(new Intent(this, GroupActivity.class));
+        }else if((editText.contains("'")||editText.contains(""))){
+            Toast.makeText(this, "Group name can't contain Special Characters", Toast.LENGTH_SHORT).show();
         }
     }
 

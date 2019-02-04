@@ -2,6 +2,7 @@ package com.varunsaini.android.ga_basictransitions;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
@@ -22,8 +24,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.method.Touch;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
@@ -40,12 +44,15 @@ public class AlarmRingActivity extends AppCompatActivity {
     Vibrator v;
     GestureDetector mGestureDetector;
     TextView actionButton,snooozeText,cancelText;
+    boolean isTurnedOff = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_ring);
+        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+
 
         actionButton = findViewById(R.id.action_button);
         snooozeText = findViewById(R.id.snoozeText);
@@ -56,6 +63,20 @@ public class AlarmRingActivity extends AppCompatActivity {
         anim.setRepeatCount(NUM_REPEATS);
         anim.setRepeatMode(Animation.REVERSE);
         actionButton.startAnimation(anim);
+
+        Handler handler = new Handler();
+        Runnable r  = new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void run() {
+                if (!isTurnedOff){
+                    dismissAlarm();
+                }
+            }
+        };
+        handler.postDelayed(r,57000);
+
+
 
         DatabaseHandler db = new DatabaseHandler(this);
         SQLiteDatabase sqLiteDatabase = this.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
@@ -109,6 +130,9 @@ public class AlarmRingActivity extends AppCompatActivity {
         PendingIntent alarmIntent1 = PendingIntent.getBroadcast(AlarmRingActivity.this, 0, intent, 0);
 
         alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (1000 * 5), alarmIntent1);
+        WakeLocker.release();
+        isTurnedOff = true;
+
 
     }
 
@@ -131,6 +155,8 @@ public class AlarmRingActivity extends AppCompatActivity {
         alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (7*24*60*60*1000), alarmIntent1);
         finishAndRemoveTask();
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+        WakeLocker.release();
+        isTurnedOff = true;
 
     }
 
@@ -211,4 +237,17 @@ public class AlarmRingActivity extends AppCompatActivity {
             return true;
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Do nothing or catch the keys you want to block
+        return false;
+    }
+
+
+//    @Override
+//    public void onAttachedToWindow() {
+//        super.onAttachedToWindow();
+//        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+//    }
 }

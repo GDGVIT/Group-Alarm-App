@@ -15,4 +15,5 @@
     <color name="pink_grad_start">#ff3683</color>
     <color name="pink_grad_end">#ff7685</color>
     <color name="selectedGroupGray">#909090</color>
+    <color name="tenPercentVisibleBlue">#40ffffff</color>
 </resources>

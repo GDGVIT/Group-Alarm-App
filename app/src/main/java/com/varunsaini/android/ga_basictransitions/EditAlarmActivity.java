@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -35,9 +36,11 @@ import com.cuboid.cuboidcirclebutton.CuboidButton;
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 import com.rm.rmswitch.RMSwitch;
+import com.shawnlin.numberpicker.NumberPicker;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -64,6 +67,9 @@ public class EditAlarmActivity extends AppCompatActivity {
     String stateMon,stateTue,stateWed,stateThurs,stateFri,stateSat,stateSun;
     String[] stateOfDays ;
     String[] days = {"mon","tue","wed","thurs","fri","sat","sun"};
+    NumberPicker min_picker,hour_picker;
+    TextView titleActionBar;
+    ImageView backActionBar;
 
 
     SQLiteDatabase sqLiteDatabase;
@@ -83,6 +89,30 @@ public class EditAlarmActivity extends AppCompatActivity {
         ringtoneText = findViewById(R.id.ringtoneText);
         vibrateText = findViewById(R.id.vibrateText);
         vibrateCard = findViewById(R.id.vibrateCard);
+        min_picker = findViewById(R.id.min_picker);
+        hour_picker = findViewById(R.id.hour_picker);
+
+        Calendar cc = Calendar.getInstance();
+//        mSelectedHour = cc.get(Calendar.HOUR_OF_DAY);
+//        mSelectedMinute = cc.get(Calendar.MINUTE);
+
+
+        min_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        mSelectedMinute = newVal;
+                        alarmTime.setText(mSelectedHour+ ":"+ newVal);
+            }
+        });
+
+        hour_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        mSelectedHour = newVal;
+                        alarmTime.setText(newVal+ ":"+ mSelectedMinute);
+            }
+        });
+
 
 
 
@@ -136,9 +166,6 @@ public class EditAlarmActivity extends AppCompatActivity {
                     stateMon = "checked";
                     buttonMon.setCardBackgroundColor(Color.rgb(30,89,246));
                     textMon.setTextColor(Color.WHITE);
-
-
-
                 }
             }
         });
@@ -262,6 +289,8 @@ public class EditAlarmActivity extends AppCompatActivity {
             mSelectedMinute = Integer.parseInt(allpreviousAlarmData[1]);
             groupNameTitle.setText(allpreviousAlarmData[4]);
             labelEdittext.setText(allpreviousAlarmData[7]);
+            min_picker.setValue(Integer.parseInt(allpreviousAlarmData[1]));
+            hour_picker.setValue(Integer.parseInt(allpreviousAlarmData[0]));
             if(allpreviousAlarmData[8]==null){
                 currentRingtoneUri = null;
             }else {
@@ -315,6 +344,12 @@ public class EditAlarmActivity extends AppCompatActivity {
                 mVibrate = 0;
                 //do nothing
             }
+        }else{
+            mSelectedHour = cc.get(Calendar.HOUR_OF_DAY);
+            mSelectedMinute = cc.get(Calendar.MINUTE);
+            alarmTime.setText(mSelectedHour + ":" + mSelectedMinute);
+            min_picker.setValue(mSelectedMinute);
+            hour_picker.setValue(mSelectedHour);
         }
 
         vibrateCard.setOnClickListener(new View.OnClickListener() {
@@ -345,14 +380,17 @@ public class EditAlarmActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
+        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
         View view =getSupportActionBar().getCustomView();
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+
+        backActionBar = view.findViewById(R.id.backActionBar);
+        titleActionBar = view.findViewById(R.id.titleActionBar);
 
 //        stateOfDays= {stateMon, stateTue, stateWed, stateThurs, stateFri, stateSat, stateSun};
 
         Typeface tf1 = Typeface.createFromAsset(getAssets(),"fonts/Karla-Bold.ttf");
-        Typeface tf2 = Typeface.createFromAsset(getAssets(),"fonts/Karla.ttf");
+        Typeface tf2 = Typeface.createFromAsset(getAssets(),"fonts/PT_Sans-Narrow-Web-Regular.ttf");
         alarmTime.setTypeface(tf1);
         repeatText.setTypeface(tf1);
         labelText.setTypeface(tf1);
@@ -366,6 +404,17 @@ public class EditAlarmActivity extends AppCompatActivity {
         textFri.setTypeface(tf);
         textSat.setTypeface(tf);
         textSun.setTypeface(tf);
+        titleActionBar.setTypeface(tf1);
+        min_picker.setTypeface(tf2);
+        hour_picker.setTypeface(tf2);
+        titleActionBar.setText("Set your Alarm");
+
+        backActionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditAlarmActivity.super.onBackPressed();
+            }
+        });
 
 
     }
@@ -402,24 +451,24 @@ public class EditAlarmActivity extends AppCompatActivity {
         ringtonePickerBuilder.show();
     }
 
-    public void setAlarmTime(View view) {
-
-        Calendar mcurrentTime = Calendar.getInstance();
-        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-        int minute = mcurrentTime.get(Calendar.MINUTE);
-        TimePickerDialog mTimePicker;
-        mTimePicker = new TimePickerDialog(EditAlarmActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mSelectedHour = selectedHour;
-                mSelectedMinute = selectedMinute;
-                alarmTime.setText( selectedHour + ":" + selectedMinute);
-            }
-        }, hour, minute, true);//Yes 24 hour time
-        mTimePicker.setTitle("Select Time");
-        mTimePicker.show();
-
-    }
+//    public void setAlarmTime(View view) {
+//
+//        Calendar mcurrentTime = Calendar.getInstance();
+//        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+//        int minute = mcurrentTime.get(Calendar.MINUTE);
+//        TimePickerDialog mTimePicker;
+//        mTimePicker = new TimePickerDialog(EditAlarmActivity.this, new TimePickerDialog.OnTimeSetListener() {
+//            @Override
+//            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+//                mSelectedHour = selectedHour;
+//                mSelectedMinute = selectedMinute;
+//                alarmTime.setText( selectedHour + ":" + selectedMinute);
+//            }
+//        }, hour, minute, true);//Yes 24 hour time
+//        mTimePicker.setTitle("Select Time");
+//        mTimePicker.show();
+//
+//    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

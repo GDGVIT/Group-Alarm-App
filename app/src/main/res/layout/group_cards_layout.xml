@@ -47,8 +47,8 @@
 
                 <com.rm.rmswitch.RMSwitch
                     android:id="@+id/all_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="29sp"
                     android:layout_gravity="center_vertical"
                     app:checked="true"
                     app:enabled="true"

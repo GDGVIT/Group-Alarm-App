@@ -14,6 +14,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <LinearLayout
+            android:id="@+id/allColor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -52,6 +53,12 @@
                     app:switchToggleCheckedColor="@color/fabBlue"
                     app:switchToggleNotCheckedColor="#000000"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/daysToRing"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Days to ring"/>
 
             <TextView
                 android:id="@+id/group_name"

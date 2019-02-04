@@ -1,12 +1,14 @@
 package com.varunsaini.android.ga_basictransitions;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.PowerManager;
 
 public abstract class WakeLocker {
     private static PowerManager.WakeLock wakeLock;
 
+    @SuppressLint("InvalidWakeLockTag")
     public static void acquire(Context ctx) {
         if (wakeLock != null) wakeLock.release();
 

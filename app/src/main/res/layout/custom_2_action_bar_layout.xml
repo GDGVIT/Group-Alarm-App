@@ -5,18 +5,30 @@
     android:orientation="horizontal"
     >
 
-    <TableRow>
+    <TableRow android:layout_width="match_parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/backActionBar"
+            android:layout_width="30dp"
+            android:layout_height="32dp"
+            android:layout_gravity="left|center_vertical"
+            android:src="@drawable/ic_actionbar_back">
+
+        </ImageView>
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/titleActionBar"
+            android:layout_gravity="center_vertical"
+            android:gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Group Alarm"
-            android:textSize="37sp"
+            android:textSize="24sp"
             android:textColor="@color/pureBlack"
-            android:layout_marginLeft="25dp"
             android:textStyle="bold"
-            android:padding="10dp"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
             />

@@ -35,4 +35,8 @@ dependencies {
 
     //circle buttonn
     compile 'com.cuboid:cuboidcirclebutton:1.0.5'
+
+    // setting time for alarm
+    compile 'com.shawnlin:number-picker:2.4.4'
+
 }
