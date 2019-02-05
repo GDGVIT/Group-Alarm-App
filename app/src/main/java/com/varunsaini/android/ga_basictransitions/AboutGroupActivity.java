@@ -88,13 +88,13 @@ public class AboutGroupActivity extends AppCompatActivity {
         db.onCreate(sqLiteDatabase);
         db.getAllDatabaseDataInLogcat();
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
-        View view = getSupportActionBar().getCustomView();
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
+//        View view = getSupportActionBar().getCustomView();
 
-        backActionBar = view.findViewById(R.id.backActionBar);
-        titleActionBar = view.findViewById(R.id.titleActionBar);
+        backActionBar = findViewById(R.id.backActionBar);
+        titleActionBar = findViewById(R.id.titleActionBar);
 
         Typeface tf1 = Typeface.createFromAsset(getAssets(),"fonts/Karla-Bold.ttf");
         titleActionBar.setTypeface(tf1);
@@ -109,6 +109,7 @@ public class AboutGroupActivity extends AppCompatActivity {
 
 
         groupNameEditext = findViewById(R.id.group_name);
+        groupNameEditext.setTypeface(tf1);
         groupName = getIntent().getStringExtra("groupName");
         if (groupName!=null){
             groupNameEditext.setText(groupName);

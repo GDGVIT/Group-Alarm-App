@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -70,6 +72,8 @@ public class EditAlarmActivity extends AppCompatActivity {
     NumberPicker min_picker,hour_picker;
     TextView titleActionBar;
     ImageView backActionBar;
+    NestedScrollView scrollView;
+
 
 
     SQLiteDatabase sqLiteDatabase;
@@ -91,6 +95,10 @@ public class EditAlarmActivity extends AppCompatActivity {
         vibrateCard = findViewById(R.id.vibrateCard);
         min_picker = findViewById(R.id.min_picker);
         hour_picker = findViewById(R.id.hour_picker);
+
+        scrollView = findViewById(R.id.scrollView);
+        scrollView.fullScroll(ScrollView.FOCUS_UP);
+        scrollView.smoothScrollTo(0,0);
 
         Calendar cc = Calendar.getInstance();
 //        mSelectedHour = cc.get(Calendar.HOUR_OF_DAY);
@@ -287,7 +295,9 @@ public class EditAlarmActivity extends AppCompatActivity {
             alarmTime.setText(allpreviousAlarmData[0]+":"+allpreviousAlarmData[1]);
             mSelectedHour = Integer.parseInt(allpreviousAlarmData[0]);
             mSelectedMinute = Integer.parseInt(allpreviousAlarmData[1]);
-            groupNameTitle.setText(allpreviousAlarmData[4]);
+            if(allpreviousAlarmData[4]!=null) {
+                groupNameTitle.setText(allpreviousAlarmData[4]);
+            }
             labelEdittext.setText(allpreviousAlarmData[7]);
             min_picker.setValue(Integer.parseInt(allpreviousAlarmData[1]));
             hour_picker.setValue(Integer.parseInt(allpreviousAlarmData[0]));
@@ -378,14 +388,14 @@ public class EditAlarmActivity extends AppCompatActivity {
 
         }
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
-        View view =getSupportActionBar().getCustomView();
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
+//        View view =getSupportActionBar().getCustomView();
+//        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
-        backActionBar = view.findViewById(R.id.backActionBar);
-        titleActionBar = view.findViewById(R.id.titleActionBar);
+        backActionBar = findViewById(R.id.backActionBar);
+        titleActionBar = findViewById(R.id.titleActionBar);
 
 //        stateOfDays= {stateMon, stateTue, stateWed, stateThurs, stateFri, stateSat, stateSun};
 

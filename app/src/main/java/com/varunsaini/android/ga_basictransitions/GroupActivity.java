@@ -88,12 +88,12 @@ public class GroupActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_group);
         recyclerView.setHasFixedSize(true);
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
-        View view =getSupportActionBar().getCustomView();
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
+//        View view =getSupportActionBar().getCustomView();
 
-        TextView title = view.findViewById(R.id.title);
+        TextView title = findViewById(R.id.title);
         title.setTypeface(tf);
 
 

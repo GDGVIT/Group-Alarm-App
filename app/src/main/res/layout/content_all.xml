@@ -7,6 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -16,6 +18,22 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".AllActivity">
         <!--tools:showIn="@layout/activity_all">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:paddingTop="24dp"
+        android:paddingLeft="24dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/title"
+            android:text="@string/appName"
+            android:textSize="28sp"
+            android:textColor="@color/pureBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,8 +45,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
-                android:layout_marginTop="22dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@color/fabBlue"
                 app:cardCornerRadius="21dp"
@@ -54,7 +72,7 @@
                 android:id="@+id/all_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="21dp"
                 app:cardElevation="10dp">

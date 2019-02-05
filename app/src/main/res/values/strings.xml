@@ -8,4 +8,6 @@
     <string name="title_activity_edit_alarm">EditAlarmActivity</string>
     <string name="title_activity_alarm_reciever">AlarmReciever</string>
     <string name="title_activity_alarm_ring">AlarmRingActivity</string>
+    <string name="appName">Group Alarm</string>
+    <string name="manageGroup">Manage Group</string>
 </resources>

@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <LinearLayout
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/backActionBar"
+            android:layout_width="30dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_actionbar_back"/>
+
+        <TextView
+            android:id="@+id/titleActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manageGroup"
+            android:gravity="right"
+            android:textColor="@color/pureBlack"
+            android:layout_gravity="center"
+            android:textSize="28sp"/>
+
+    </LinearLayout>
+
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scrollView"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -20,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="9dp"
@@ -70,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="Group Name"
+                    android:text="No group"
                     android:textColor="@color/pureBlack"
                     android:textSize="23sp" />
 
@@ -242,10 +277,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:backgroundTint="@color/twentyFivePercentVisible"
+                    android:backgroundTint="@color/tenPercentVisible"
                     android:hint="Alarm Label"
+                    android:textColorHint="@drawable/selector"
+                    android:inputType="textNoSuggestions"
+                    android:background="@null"
                     android:textCursorDrawable="@color/pureBlack" />
-
                 <android.support.v7.widget.CardView
                     android:layout_marginLeft="4dp"
                     android:layout_width="wrap_content"
@@ -360,4 +397,5 @@
 
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
+</LinearLayout>

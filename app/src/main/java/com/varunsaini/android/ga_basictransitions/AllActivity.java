@@ -54,7 +54,7 @@ public class AllActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     SQLiteDatabase sqLiteDatabase;
     DatabaseHandler db;
-    TextView allView,groupView;
+    TextView allView,groupView,title;
     NestedScrollView scrollView;
     FloatingActionButton fabAddAlarm,fabDeleteAlarm,fabCancel;
     LinearLayout allColor;
@@ -80,6 +80,8 @@ public class AllActivity extends AppCompatActivity {
         fabDeleteAlarm = findViewById(R.id.fabDeleteAlarm);
         fabCancel = findViewById(R.id.fabCancel);
         allColor = findViewById(R.id.allColor);
+        title = findViewById(R.id.title);
+        title.setTypeface(tf);
 
 
         db = new DatabaseHandler(this);
@@ -102,14 +104,14 @@ public class AllActivity extends AppCompatActivity {
         });
 
 
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
-        View view =getSupportActionBar().getCustomView();
-
-        TextView title = view.findViewById(R.id.title);
-
-        title.setTypeface(tf);
+//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+//        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
+//        View view =getSupportActionBar().getCustomView();
+//
+//        TextView title = view.findViewById(R.id.title);
+//
+//        title.setTypeface(tf);
 
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_all_alarms);
         recyclerView.setHasFixedSize(true);
@@ -280,6 +282,7 @@ public class AllActivity extends AppCompatActivity {
             });
 
             fabDeleteAlarm.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("RestrictedApi")
                 @Override
                 public void onClick(View v) {
                     DatabaseHandler db = new DatabaseHandler(context);
@@ -290,17 +293,20 @@ public class AllActivity extends AppCompatActivity {
                     for(int i=intString.size()-1;i>=0;i--){
                         Log.d("fggf", "onClick: "+intString.get(i) + "||");
 
-                    db.deleteAnAlarm(s.get(i).alarm_pending_req_code);
-                    ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(s.get(i).alarm_pending_req_code).substring(3,9)));
+                    db.deleteAnAlarm(s.get(intString.get(i)).alarm_pending_req_code);
+                    ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).substring(3,9)));
                     for(Integer ii : integerArrayList) {
                         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(ii), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         alarmMgr.cancel(alarmIntent);
                     }
-                    db.removeDaysPendingReq(Integer.valueOf(String.valueOf(s.get(i).alarm_pending_req_code).substring(3,9)));
+                    db.removeDaysPendingReq(Integer.valueOf(String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).substring(3,9)));
                         numberOfGroupsSelected--;
                         s.remove(intString.get(i).intValue());
                         notifyItemRemoved(intString.get(i));
                     }
+                    fabDeleteAlarm.setVisibility(View.GONE);
+                    fabCancel.setVisibility(View.GONE);
+                    fabAddAlarm.setVisibility(View.VISIBLE);
 
                 }
             });
