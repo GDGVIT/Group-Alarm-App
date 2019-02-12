@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -51,12 +54,13 @@ public class EditAlarmActivity extends AppCompatActivity {
     String mRingtoneUri;
     int mVibrate = 0;
     Uri currentRingtoneUri = null;
-    TextView alarmTime,groupNameTitle,repeatText,labelText,ringtoneText,vibrateText;
+    TextView alarmTime, groupNameTitle, repeatText, labelText, ringtoneText, vibrateText;
     EditText labelEdittext;
     RMSwitch rmSwitch1;
-    CardView buttonMon,buttonTue,buttonWed,buttonThurs,buttonFri,buttonSat,buttonSun,vibrateCard;
-    TextView textMon,textTue,textWed,textThurs,textFri,textSat,textSun;
-    int groupColor,groupState;
+    CardView buttonMon, buttonTue, buttonWed, buttonThurs, buttonFri, buttonSat, buttonSun, vibrateCard;
+    TextView textMon, textTue, textWed, textThurs, textFri, textSat, textSun;
+    int groupColor;
+    int groupState;
     String groupName;
     private AlarmManager alarmMgr;
     private PendingIntent[] alarmIntent;
@@ -66,14 +70,15 @@ public class EditAlarmActivity extends AppCompatActivity {
     String[] allpreviousAlarmData;
     String nameOfGroup;
     String daystoRing = "";
-    String stateMon,stateTue,stateWed,stateThurs,stateFri,stateSat,stateSun;
-    String[] stateOfDays ;
-    String[] days = {"mon","tue","wed","thurs","fri","sat","sun"};
-    NumberPicker min_picker,hour_picker;
+    String stateMon, stateTue, stateWed, stateThurs, stateFri, stateSat, stateSun;
+    String[] stateOfDays;
+    String[] days = {"mon", "tue", "wed", "thurs", "fri", "sat", "sun"};
+    NumberPicker min_picker, hour_picker;
     TextView titleActionBar;
     ImageView backActionBar;
     NestedScrollView scrollView;
-
+    int alarmPreviousStateInGroup;
+    String hourString,minString ;
 
 
     SQLiteDatabase sqLiteDatabase;
@@ -86,7 +91,6 @@ public class EditAlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_alarm);
         alarmTime = findViewById(R.id.alarmTime);
         labelEdittext = findViewById(R.id.labelEdittext);
-        rmSwitch1 = findViewById(R.id.rm_switch1);
         groupNameTitle = findViewById(R.id.group_name);
         repeatText = findViewById(R.id.repeatText);
         labelText = findViewById(R.id.labelText);
@@ -96,45 +100,50 @@ public class EditAlarmActivity extends AppCompatActivity {
         min_picker = findViewById(R.id.min_picker);
         hour_picker = findViewById(R.id.hour_picker);
 
+        ringtoneText.setSelected(true);
+
         scrollView = findViewById(R.id.scrollView);
         scrollView.fullScroll(ScrollView.FOCUS_UP);
-        scrollView.smoothScrollTo(0,0);
+        scrollView.smoothScrollTo(0, 0);
 
         Calendar cc = Calendar.getInstance();
-//        mSelectedHour = cc.get(Calendar.HOUR_OF_DAY);
-//        mSelectedMinute = cc.get(Calendar.MINUTE);
+//        hourString = String.valueOf(cc.get(Calendar.HOUR_OF_DAY));
+//        minString = String.valueOf(cc.get(Calendar.MINUTE));
+
 
 
         min_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        mSelectedMinute = newVal;
-                        alarmTime.setText(mSelectedHour+ ":"+ newVal);
+                if(newVal==0||newVal==1||newVal==2||newVal==3||newVal==4||newVal==5||newVal==6||newVal==7||newVal==8||newVal==9)
+                {
+                    minString = "0"+newVal;
+                }else{
+                    minString = String.valueOf(newVal);
+                }
+                mSelectedMinute = newVal;
+                alarmTime.setText(hourString + ":" + minString);
             }
         });
 
         hour_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        mSelectedHour = newVal;
-                        alarmTime.setText(newVal+ ":"+ mSelectedMinute);
+                if(newVal==0||newVal==1||newVal==2||newVal==3||newVal==4||newVal==5||newVal==6||newVal==7||newVal==8||newVal==9)
+                {
+                    hourString = "0"+newVal;
+                }else{
+                    hourString = String.valueOf(newVal);
+                }
+                mSelectedHour = newVal;
+                alarmTime.setText(hourString + ":" + minString);
             }
         });
 
 
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Karla.ttf");
 
-
-
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/Karla.ttf");
-//        Button[] bt = {buttonMon,buttonTue,buttonWed,buttonThurs,buttonFri,buttonSat,buttonSun};
-//        int[] buttonId = {R.id.buttonMon,R.id.buttonTue,R.id.buttonWed,R.id.buttonThurs,R.id.buttonFri,R.id.buttonSat,R.id.buttonSun};
-//        String[] stateOfDays = {stateMon,stateTue,stateWed,stateThurs,stateFri,stateSat,stateSun};
-//        for(int i=0;i<7;i++){
-//            bt[i] = (Button)findViewById(buttonId[i]);
-//            Log.d("dss", "onCreate: "+bt[i] + " = " + findViewById(buttonId[i]));
-//            stateOfDays[i] = "unchecked";
-//        }
-        stateMon = "unchecked";;
+        stateMon = "unchecked";
         stateTue = "unchecked";
         stateWed = "unchecked";
         stateThurs = "unchecked";
@@ -159,20 +168,18 @@ public class EditAlarmActivity extends AppCompatActivity {
         textSun = findViewById(R.id.textSun);
 
 
-
-
         buttonMon.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateMon.equals("checked")){
+                if (stateMon.equals("checked")) {
                     stateMon = "unchecked";
                     buttonMon.setCardBackgroundColor(Color.WHITE);
                     textMon.setTextColor(Color.BLACK);
 
-                }else{
+                } else {
                     stateMon = "checked";
-                    buttonMon.setCardBackgroundColor(Color.rgb(30,89,246));
+                    buttonMon.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textMon.setTextColor(Color.WHITE);
                 }
             }
@@ -182,13 +189,13 @@ public class EditAlarmActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateTue.equals("checked")){
+                if (stateTue.equals("checked")) {
                     stateTue = "unchecked";
                     buttonTue.setCardBackgroundColor(Color.WHITE);
                     textTue.setTextColor(Color.BLACK);
-                }else{
+                } else {
                     stateTue = "checked";
-                    buttonTue.setCardBackgroundColor(Color.rgb(30,89,246));
+                    buttonTue.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textTue.setTextColor(Color.WHITE);
                 }
             }
@@ -198,13 +205,13 @@ public class EditAlarmActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateWed.equals("checked")){
+                if (stateWed.equals("checked")) {
                     stateWed = "unchecked";
                     buttonWed.setCardBackgroundColor(Color.WHITE);
                     textWed.setTextColor(Color.BLACK);
-                }else{
+                } else {
                     stateWed = "checked";
-                    buttonWed.setCardBackgroundColor(Color.rgb(30,89,246));
+                    buttonWed.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textWed.setTextColor(Color.WHITE);
                 }
             }
@@ -214,13 +221,13 @@ public class EditAlarmActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateThurs.equals("checked")){
+                if (stateThurs.equals("checked")) {
                     stateThurs = "unchecked";
                     buttonThurs.setCardBackgroundColor(Color.WHITE);
                     textThurs.setTextColor(Color.BLACK);
-                }else{
+                } else {
                     stateThurs = "checked";
-                    buttonThurs.setCardBackgroundColor(Color.rgb(30,89,246));
+                    buttonThurs.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textThurs.setTextColor(Color.WHITE);
                 }
             }
@@ -230,13 +237,13 @@ public class EditAlarmActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateFri.equals("checked")){
+                if (stateFri.equals("checked")) {
                     stateFri = "unchecked";
                     buttonFri.setCardBackgroundColor(Color.WHITE);
                     textFri.setTextColor(Color.BLACK);
-                }else{
+                } else {
                     stateFri = "checked";
-                    buttonFri.setCardBackgroundColor(Color.rgb(30,89,246));
+                    buttonFri.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textFri.setTextColor(Color.WHITE);
                 }
             }
@@ -247,13 +254,13 @@ public class EditAlarmActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateSat.equals("checked")){
+                if (stateSat.equals("checked")) {
                     stateSat = "unchecked";
                     buttonSat.setCardBackgroundColor(Color.WHITE);
                     textSat.setTextColor(Color.BLACK);
-                }else{
+                } else {
                     stateSat = "checked";
-                    buttonSat.setCardBackgroundColor(Color.rgb(30,89,246));
+                    buttonSat.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textSat.setTextColor(Color.WHITE);
                 }
             }
@@ -263,11 +270,11 @@ public class EditAlarmActivity extends AppCompatActivity {
             @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
-                if (stateSun.equals("checked")){
+                if (stateSun.equals("checked")) {
                     stateSun = "unchecked";
                     buttonSun.setCardBackgroundColor(Color.WHITE);
                     textSun.setTextColor(Color.BLACK);
-                }else {
+                } else {
                     stateSun = "checked";
                     buttonSun.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     textSun.setTextColor(Color.WHITE);
@@ -277,87 +284,122 @@ public class EditAlarmActivity extends AppCompatActivity {
 
 
         db = new DatabaseHandler(this);
-        sqLiteDatabase = this.openOrCreateDatabase("Alarm",MODE_PRIVATE,null);
+        sqLiteDatabase = this.openOrCreateDatabase("Alarm", MODE_PRIVATE, null);
         db.onCreate(sqLiteDatabase);
 
+
         nameOfGroup = getIntent().getStringExtra("nameOfGroup");
-        Log.d("asa", "onCreate: Edittext"+nameOfGroup);
-        if(nameOfGroup!=null){
+        Log.d("asa", "onCreate: Edittext" + nameOfGroup);
+        if (nameOfGroup != null) {
             groupNameTitle.setText(nameOfGroup);
             groupName = nameOfGroup;
-            groupColor = getIntent().getIntExtra("colorOfGroup",-1);
+            groupColor = getIntent().getIntExtra("colorOfGroup", -1);
+//            groupState = 1;
             // put groupColor and groupState here
         }
 
-        alarm_pending_req_code = getIntent().getIntExtra("alarm_pending_req_code",-1);
-        if (alarm_pending_req_code>0){
+        alarm_pending_req_code = getIntent().getIntExtra("alarm_pending_req_code", -1);
+        if (alarm_pending_req_code > 0) {
             allpreviousAlarmData = db.getAllPreviousEditAlarmData(alarm_pending_req_code);
-            alarmTime.setText(allpreviousAlarmData[0]+":"+allpreviousAlarmData[1]);
             mSelectedHour = Integer.parseInt(allpreviousAlarmData[0]);
             mSelectedMinute = Integer.parseInt(allpreviousAlarmData[1]);
-            if(allpreviousAlarmData[4]!=null) {
+            if(mSelectedHour==0||mSelectedHour==1||mSelectedHour==2||mSelectedHour==3||mSelectedHour==4||mSelectedHour==5||mSelectedHour==6||mSelectedHour==7||mSelectedHour==8||mSelectedHour==9) {
+                hourString = "0"+mSelectedHour;
+            }else{
+                hourString = String.valueOf(mSelectedHour);
+            }
+
+            if(mSelectedMinute==0||mSelectedMinute==1||mSelectedMinute==2||mSelectedMinute==3||mSelectedMinute==4||mSelectedMinute==5||mSelectedMinute==6||mSelectedMinute==7||mSelectedMinute==8||mSelectedMinute==9) {
+                minString = "0"+mSelectedMinute;
+            }else{
+                minString = String.valueOf(mSelectedMinute);
+            }
+            alarmTime.setText(hourString + ":" + minString);
+
+            if(allpreviousAlarmData[8]!=null) {
+                Uri uri = Uri.parse(allpreviousAlarmData[8]);
+                Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+                String title = ringtone.getTitle(this);
+                mRingtoneUri = allpreviousAlarmData[8];
+                ringtoneText.setText(title);
+            }
+
+
+            if (allpreviousAlarmData[4] != null) {
                 groupNameTitle.setText(allpreviousAlarmData[4]);
             }
             labelEdittext.setText(allpreviousAlarmData[7]);
             min_picker.setValue(Integer.parseInt(allpreviousAlarmData[1]));
             hour_picker.setValue(Integer.parseInt(allpreviousAlarmData[0]));
-            if(allpreviousAlarmData[8]==null){
+            if (allpreviousAlarmData[8] == null) {
                 currentRingtoneUri = null;
-            }else {
+            } else {
                 currentRingtoneUri = Uri.parse(allpreviousAlarmData[8]);
             }
-            if(allpreviousAlarmData[2].equals("0")){
-                rmSwitch1.setChecked(false);
+            if (allpreviousAlarmData[2].equals("0")) {
+//                rmSwitch1.setChecked(false);
             }
-            if(!allpreviousAlarmData[3].equals("")){
+            if (!allpreviousAlarmData[3].equals("")) {
                 String savedDays = allpreviousAlarmData[3];
-                Log.d("aaa", "onCreate: "+savedDays);
+                Log.d("aaa", "onCreate: " + savedDays);
                 String[] individualDays = savedDays.split("#");
-                for(String d:individualDays){
-                    Log.d("aaew", "onCreate: "+d+'\n');
-                    if(d.equals("mon")){
+                for (String d : individualDays) {
+                    Log.d("aaew", "onCreate: " + d + '\n');
+                    if (d.equals("mon")) {
                         stateMon = "checked";
                         buttonMon.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textMon.setTextColor(Color.WHITE);
-                    }else if(d.equals("tue")){
+                    } else if (d.equals("tue")) {
                         stateTue = "checked";
                         buttonTue.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textTue.setTextColor(Color.WHITE);
-                    }else if(d.equals("wed")){
+                    } else if (d.equals("wed")) {
                         stateWed = "checked";
                         buttonWed.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textWed.setTextColor(Color.WHITE);
-                    }else if(d.equals("thurs")){
+                    } else if (d.equals("thurs")) {
                         stateThurs = "checked";
                         buttonThurs.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textThurs.setTextColor(Color.WHITE);
-                    }else if(d.equals("fri")){
+                    } else if (d.equals("fri")) {
                         stateFri = "checked";
                         buttonFri.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textFri.setTextColor(Color.WHITE);
-                    }else if(d.equals("sat")){
+                    } else if (d.equals("sat")) {
                         stateSat = "checked";
                         buttonSat.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textSat.setTextColor(Color.WHITE);
-                    }else if(d.equals("sun")){
+                    } else if (d.equals("sun")) {
                         stateSun = "checked";
                         buttonSun.setCardBackgroundColor(Color.rgb(30, 89, 246));
                         textSun.setTextColor(Color.WHITE);
                     }
                 }
             }
-            if(allpreviousAlarmData[9].equals("1")){
+            if (allpreviousAlarmData[9].equals("1")) {
                 vibrateCard.setCardBackgroundColor(Color.rgb(30, 89, 246));
                 vibrateText.setTextColor(Color.WHITE);
                 mVibrate = 1;
-            }else{
+            } else {
                 mVibrate = 0;
                 //do nothing
             }
-        }else{
+        } else {
             mSelectedHour = cc.get(Calendar.HOUR_OF_DAY);
             mSelectedMinute = cc.get(Calendar.MINUTE);
-            alarmTime.setText(mSelectedHour + ":" + mSelectedMinute);
+            if(mSelectedHour==0||mSelectedHour==1||mSelectedHour==2||mSelectedHour==3||mSelectedHour==4||mSelectedHour==5||mSelectedHour==6||mSelectedHour==7||mSelectedHour==8||mSelectedHour==9) {
+                hourString = "0"+mSelectedHour;
+            }else{
+                hourString = String.valueOf(mSelectedHour);
+            }
+
+            if(mSelectedMinute==0||mSelectedMinute==1||mSelectedMinute==2||mSelectedMinute==3||mSelectedMinute==4||mSelectedMinute==5||mSelectedMinute==6||mSelectedMinute==7||mSelectedMinute==8||mSelectedMinute==9) {
+                minString = "0"+mSelectedMinute;
+            }else{
+                minString = String.valueOf(mSelectedMinute);
+            }
+            alarmTime.setText(hourString + ":" + minString);
+//            alarmTime.setText(mSelectedHour + ":" + mSelectedMinute);
             min_picker.setValue(mSelectedMinute);
             hour_picker.setValue(mSelectedHour);
         }
@@ -365,11 +407,11 @@ public class EditAlarmActivity extends AppCompatActivity {
         vibrateCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mVibrate==1){
+                if (mVibrate == 1) {
                     mVibrate = 0;
                     vibrateCard.setCardBackgroundColor(Color.WHITE);
                     vibrateText.setTextColor(Color.BLACK);
-                }else{
+                } else {
                     mVibrate = 1;
                     vibrateCard.setCardBackgroundColor(Color.rgb(30, 89, 246));
                     vibrateText.setTextColor(Color.WHITE);
@@ -377,30 +419,21 @@ public class EditAlarmActivity extends AppCompatActivity {
             }
         });
 
-////        sqLiteDatabase.execSQL("drop table if exists alarmss");
-//        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS alarmss(hours int(2),minutes int(2),alarmState int(1),group_name VARCHAR(50),days VARCHAR(50),group_color int(20),group_state boolean,alarm_label text,ringtone_uri VARCHAR(256),vibrate boolean,alarm_pending_req_code int primary key)");
-
-        int belongs_to_group = getIntent().getIntExtra("belongs_to_group",-1);
-        if(belongs_to_group==-1 && nameOfGroup==null){
-            groupName=null;
-            groupColor=0;//0 means does not belong to group
-            groupState=0;  //0 means does not belong to group
+        int belongs_to_group = getIntent().getIntExtra("belongs_to_group", -1);
+        if (belongs_to_group == 0 && nameOfGroup == null) {
+            Log.d("days", "insided beongToGroup");
+            groupName = null;
+            groupColor = 0;//0 means does not belong to group
+            groupState = -2;
 
         }
 
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
-//        View view =getSupportActionBar().getCustomView();
-//        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
         backActionBar = findViewById(R.id.backActionBar);
         titleActionBar = findViewById(R.id.titleActionBar);
 
-//        stateOfDays= {stateMon, stateTue, stateWed, stateThurs, stateFri, stateSat, stateSun};
-
-        Typeface tf1 = Typeface.createFromAsset(getAssets(),"fonts/Karla-Bold.ttf");
-        Typeface tf2 = Typeface.createFromAsset(getAssets(),"fonts/PT_Sans-Narrow-Web-Regular.ttf");
+        Typeface tf1 = Typeface.createFromAsset(getAssets(), "fonts/Karla-Bold.ttf");
+        Typeface tf2 = Typeface.createFromAsset(getAssets(), "fonts/ostrich-regular.ttf");
         alarmTime.setTypeface(tf1);
         repeatText.setTypeface(tf1);
         labelText.setTypeface(tf1);
@@ -430,55 +463,41 @@ public class EditAlarmActivity extends AppCompatActivity {
     }
 
 
-    public void ringtoneSelect(View view){
-        RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
-                .Builder(EditAlarmActivity.this, getSupportFragmentManager())
-
-                .setTitle("Select ringtone")
-                .setCurrentRingtoneUri(null)
-                .displayDefaultRingtone(true)
-
-                //Set true to allow user to select silent (i.e. No ringtone.).
-                .displaySilentRingtone(true)
-                .setPositiveButtonText("SET RINGTONE")
-                .setCancelButtonText("CANCEL")
-                .setPlaySampleWhileSelection(true)
-                .setListener(new RingtonePickerListener() {
-                    @Override
-                    public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
-                        //Do someting with selected uri...
-                        mRingtoneUri = ringtoneUri.toString();
-                    }
-                });
-
-//Add the desirable ringtone types.
-//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_MUSIC);
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_NOTIFICATION);
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_RINGTONE);
-        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM);
-
-//Display the dialog.
-        ringtonePickerBuilder.show();
+    public void ringtoneSelect(View view) {
+//        RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
+//                .Builder(EditAlarmActivity.this, getSupportFragmentManager())
+//
+//                .setTitle("Select ringtone")
+//                .setCurrentRingtoneUri(null)
+//                .displayDefaultRingtone(true)
+//
+//                //Set true to allow user to select silent (i.e. No ringtone.).
+//                .displaySilentRingtone(true)
+//                .setPositiveButtonText("SET RINGTONE")
+//                .setCancelButtonText("CANCEL")
+//                .setPlaySampleWhileSelection(true)
+//                .setListener(new RingtonePickerListener() {
+//                    @Override
+//                    public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
+//                        mRingtoneUri = ringtoneUri.toString();
+//                    }
+//                });
+//
+//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_NOTIFICATION);
+//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_RINGTONE);
+//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM);
+//
+////Display the dialog.
+//        ringtonePickerBuilder.show();
+//
+        //////////////////////////////////////////
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone for alarm:");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        EditAlarmActivity.this.startActivityForResult(intent, 1);
     }
-
-//    public void setAlarmTime(View view) {
-//
-//        Calendar mcurrentTime = Calendar.getInstance();
-//        int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//        int minute = mcurrentTime.get(Calendar.MINUTE);
-//        TimePickerDialog mTimePicker;
-//        mTimePicker = new TimePickerDialog(EditAlarmActivity.this, new TimePickerDialog.OnTimeSetListener() {
-//            @Override
-//            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                mSelectedHour = selectedHour;
-//                mSelectedMinute = selectedMinute;
-//                alarmTime.setText( selectedHour + ":" + selectedMinute);
-//            }
-//        }, hour, minute, true);//Yes 24 hour time
-//        mTimePicker.setTitle("Select Time");
-//        mTimePicker.show();
-//
-//    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -499,15 +518,6 @@ public class EditAlarmActivity extends AppCompatActivity {
             }
         }
 
-        Calendar now = Calendar.getInstance();
-        long _alarm = 0;
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, mSelectedHour);
-        calendar.set(Calendar.MINUTE, mSelectedMinute);
-        calendar.set(Calendar.SECOND,0);
-
         String labelText;
         if (labelEdittext.getText().toString().equals("")) {
             labelText = null;
@@ -515,351 +525,231 @@ public class EditAlarmActivity extends AppCompatActivity {
             labelText = labelEdittext.getText().toString();
         }
 
-//        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-//            _alarm = calendar.getTimeInMillis() + (AlarmManager.INTERVAL_DAY+7);
-//        else
-//            _alarm = calendar.getTimeInMillis();
-
-
+        ArrayList<AllAlarm> allAlarmArrayList = db.getAllActivtiyAlarmList();
+        boolean alarmAlreadyExists = false;
+//        for (AllAlarm s : allAlarmArrayList) {
+//            if ((mSelectedHour + ":" + mSelectedMinute).equals(s.time)) {
+//                if (s.groupName != null) {
+//                    Toast.makeText(this, "Alarm Already Exists at " + s.groupName, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(this, "Alarm Already Exists", Toast.LENGTH_SHORT).show();
+//                }
+//                alarmAlreadyExists = true;
+//            }
+//        }
+        int alarm_state = 0;
         if (alarm_pending_req_code > 0) {
 
-//            if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-//                _alarm = calendar.getTimeInMillis() + (AlarmManager.INTERVAL_DAY+7);
-//            else
-//                _alarm = calendar.getTimeInMillis();
-            db.updataAllAlarmData(mSelectedHour, mSelectedMinute, 1, daystoRing, labelText, mRingtoneUri, mVibrate, alarm_pending_req_code);
 
-            Log.d("CMS", "setAlarmOn: " + alarm_pending_req_code);
+            if (db.getGroupStateByGroupName(groupName) != 0) {
+                alarm_state = 1;
+            }
+            db.updataAllAlarmData(mSelectedHour, mSelectedMinute, alarm_state, daystoRing, labelText, mRingtoneUri, mVibrate, alarm_pending_req_code, -1);
             alarmMgr = (AlarmManager) EditAlarmActivity.this.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(EditAlarmActivity.this, AlarmReciever.class);
-//            intent.putExtra("request_code", alarm_pending_req_code);
 
 
-            if (!daystoRing.equals("")) {
+            Log.d("days", "setAlarmOn: " + daystoRing);
+            Log.d("ggsbgn", "setAlarmOn: " + db.getGroupStateByGroupName(groupName));
+            Log.d("gs", "setAlarmOn: " + groupState);
+
+            if ((!daystoRing.equals("") && db.getGroupStateByGroupName(groupName) != 0) || (!daystoRing.equals("") && groupState == -2)) {
                 String[] dayys = daystoRing.split("#");
                 alarmIntent = new PendingIntent[dayys.length];
                 int[] allRequests = new int[dayys.length];
                 int k = 0;
+                Intent intent = new Intent(EditAlarmActivity.this, AlarmReciever.class);
 
-                alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
-                for(Integer i : integerArrayList) {
+                alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3, 9)));
+                for (Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(this, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
                 }
+                String x = String.valueOf(alarm_pending_req_code);
 
                 for (String d : dayys) {
                     if (d.equals("mon")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("111"+x.substring(3,9) );
-                        calendar.set(Calendar.DAY_OF_WEEK, 2);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("111" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 2, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("tue")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("222"+x.substring(3,9) );
-                        calendar.set(Calendar.DAY_OF_WEEK, 3);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                            alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("222" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 3, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("wed")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("333" + x.substring(3,9) );
-                        calendar.set(Calendar.DAY_OF_WEEK, 4);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("333" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 4, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("thurs")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("444"  + x.substring(3,9));
-                        calendar.set(Calendar.DAY_OF_WEEK, 5);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                            alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("444" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 5, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("fri")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("555" + x.substring(3,9));
-                        calendar.set(Calendar.DAY_OF_WEEK, 6);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("555" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 6, k);
+
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sat")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("666" + x.substring(3,9));
-                        calendar.set(Calendar.DAY_OF_WEEK, 7);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("666" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 7, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sun")) {
-                        String x = String.valueOf(alarm_pending_req_code);
-                        int y = Integer.valueOf("777" + x.substring(3,9));
-                        calendar.set(Calendar.DAY_OF_WEEK, 1);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        Log.d("calendar.getTimeInMil", "setAlarmOn: calendar.getTimeInMillis()" + calendar.getTimeInMillis());
-                        Log.d("now.getTimeInMill", "setAlarmOn: now.getTimeInMillis()" + now.getTimeInMillis());
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+                        int y = Integer.valueOf("777" + x.substring(3, 9));
+                        settingAlarmOnDays(y, 1, k);
                         allRequests[k] = y;
                         k++;
                     }
                 }
 
-                //remove pending intents
-//                alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
-//                for(Integer i : integerArrayList) {
-//                    PendingIntent alarmIntent = PendingIntent.getBroadcast(this, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                    alarmMgr.cancel(alarmIntent);
-//                }
-                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
-                for(int i=0;i<dayys.length;i++){
+
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3, 9)));
+                for (int i = 0; i < dayys.length; i++) {
                     db.addDaysPendingReq(allRequests[i]);
                 }
 
 
             }
-            if(alarmIntent==null||alarmIntent.length<1 ){
+            if (daystoRing.equals("")) {
                 Toast.makeText(this, "Select days", Toast.LENGTH_SHORT).show();
-            }else {
-//                for (int i = 0; i < alarmIntent.length; i++) {
-//                    Log.d("sI", "settingIntents "+alarmIntent[i]);
-////                    alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent[i]);
-////                    alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[i]);
-//                }
-
+            } else {
                 Intent i = new Intent(EditAlarmActivity.this, AllActivity.class);
                 startActivity(i);
             }
 
-//            alarmIntent = PendingIntent.getBroadcast(EditAlarmActivity.this, alarm_pending_req_code, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         } else {
 
-            int currentTimeInMilliSeconds = (int) calendar.getTimeInMillis();
+            int currentTimeInMilliSeconds = (int) Calendar.getInstance().getTimeInMillis();
             if (currentTimeInMilliSeconds < 0) {
                 currentTimeInMilliSeconds = -1 * currentTimeInMilliSeconds;
             }
+            if (db.getGroupStateByGroupName(groupName) != 0) {
+                alarm_state = 1;
+            }
 
-            Alarm a = new Alarm(mSelectedHour, mSelectedMinute, 1, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, mVibrate, currentTimeInMilliSeconds);
-//            db.addAlarm(a);
+//                Alarm a = new Alarm(mSelectedHour, mSelectedMinute, 1, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, mVibrate, currentTimeInMilliSeconds,-1);
             Log.d("CMS", "setAlarmOn: " + currentTimeInMilliSeconds);
 
             alarmMgr = (AlarmManager) EditAlarmActivity.this.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent(EditAlarmActivity.this, AlarmReciever.class);
-//            intent.putExtra("request_code", (int) currentTimeInMilliSeconds);
+            String x = String.valueOf(currentTimeInMilliSeconds);
 
 
-            if (!daystoRing.equals("")) {
-                String[] dayys = daystoRing.split("#");
-                alarmIntent = new PendingIntent[dayys.length];
-                int k = 0;
-                for (String d : dayys) {
-                    if (d.equals("mon")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("111"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 2);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        Log.d("cal", "setAlarmOn: calMilli:"+calendar.getTimeInMillis());
-                        Log.d("now", "setAlarmOn: nowMilli:"+now.getTimeInMillis());
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
-                        k++;
-                        Log.d("kkl", "setAlarmOn: "+"Alarm Mon End");
-                    } else if (d.equals("tue")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("222"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 3);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        Log.d("cal", "setAlarmOn: calMilli:"+calendar.getTimeInMillis());
-                        Log.d("now", "setAlarmOn: nowMilli:"+now.getTimeInMillis());
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                            alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+            Log.d("days", "setAlarmOn: " + daystoRing);
+            Log.d("ggsbgn", "setAlarmOn: " + db.getGroupStateByGroupName(groupName));
+            Log.d("gs", "setAlarmOn: " + groupState);
 
-                        k++;
-                    } else if (d.equals("wed")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("333"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 4);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
-                        k++;
-                    } else if (d.equals("thurs")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("444"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 5);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                        {Log.d("if", "setAlarmOn: "+"inside if");
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);}
-                        else{
-                            Log.d("else", "setAlarmOn: "+"inside else");
-                            _alarm = calendar.getTimeInMillis();}
-                            alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
-                        k++;
-                    } else if (d.equals("fri")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("555"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 6);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
-                        k++;
-                    } else if (d.equals("sat")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("666"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 7);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + ((24*60*60*1000*7));
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
-                        k++;
-                    } else if (d.equals("sun")) {
-                        String x = String.valueOf(currentTimeInMilliSeconds);
-                        int y = Integer.valueOf("777"+x.substring(3,9));
-                        db.addDaysPendingReq(y);
-                        calendar.set(Calendar.DAY_OF_WEEK, 1);
-                        Log.d("xzx", "setAlarmOn: "+y);
-                        intent.putExtra("request_code", y);
-                        if(calendar.getTimeInMillis() <= now.getTimeInMillis())
-                            _alarm = calendar.getTimeInMillis() + (24*60*60*1000*7);
-                        else
-                            _alarm = calendar.getTimeInMillis();
-                        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
-                        k++;
+            if ((!daystoRing.equals("") && db.getGroupStateByGroupName(groupName) != 0) || (!daystoRing.equals("") && groupState == -2)) {
+                Log.d("11mm", "setAlarmOn: entered in first if");
+                if ((db.getGroupStateByGroupName(groupName) != 0) || (groupState == -2)) {
+                    Log.d("11mm", "setAlarmOn: entered in second if");
+                    String[] dayys = daystoRing.split("#");
+                    alarmIntent = new PendingIntent[dayys.length];
+                    int k = 0;
+                    for (String d : dayys) {
+                        if (d.equals("mon")) {
+                            int y = Integer.valueOf("111" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 2, k);
+                            k++;
+                        } else if (d.equals("tue")) {
+                            int y = Integer.valueOf("222" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 3, k);
+                            k++;
+                        } else if (d.equals("wed")) {
+                            int y = Integer.valueOf("333" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 4, k);
+                            k++;
+                        } else if (d.equals("thurs")) {
+                            int y = Integer.valueOf("444" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 5, k);
+                            k++;
+                        } else if (d.equals("fri")) {
+                            int y = Integer.valueOf("555" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 6, k);
+                            k++;
+                        } else if (d.equals("sat")) {
+                            int y = Integer.valueOf("666" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 7, k);
+                            k++;
+                        } else if (d.equals("sun")) {
+                            int y = Integer.valueOf("777" + x.substring(3, 9));
+                            db.addDaysPendingReq(y);
+                            settingAlarmOnDays(y, 1, k);
+                            k++;
+                        }
                     }
 
                 }
-//            alarmIntent = PendingIntent.getBroadcast(EditAlarmActivity.this, (int) currentTimeInMilliSeconds, intent, 0);
-
             }
-//            if(alarmIntent==null||alarmIntent.length<1 ){
-//                Toast.makeText(this, "Select days", Toast.LENGTH_SHORT).show();
-//            }else {
-//                for (int i = 0; i < alarmIntent.length; i++) {
-//                    alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent[i]); }
-//                db.addAlarm(a);
-//                Intent i = new Intent(EditAlarmActivity.this, AllActivity.class);
-//                startActivity(i);
-//            }
-
-            if(alarmIntent==null||alarmIntent.length<1 ){
+            if (daystoRing.equals("")) {
                 Toast.makeText(this, "Select days", Toast.LENGTH_SHORT).show();
-            }else {
-//                for (int i = 0; i < alarmIntent.length; i++) {
-//                    Log.d("sI", "settingIntents "+alarmIntent[i]);
-////                    alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmIntent[i]);
-//                    alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[i]);
-//                    }
-                    db.addAlarm(a);
-
-
+            } else {
+                groupState = db.getGroupStateByGroupName(groupName);
+                if (groupState == -1) {
+                    groupState = 1;
+                }
+                Alarm a = new Alarm(mSelectedHour, mSelectedMinute, alarm_state, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, mVibrate, currentTimeInMilliSeconds, -1);
+                db.addAlarm(a);
                 Intent i = new Intent(EditAlarmActivity.this, AllActivity.class);
                 startActivity(i);
             }
 
-//        alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                SystemClock.elapsedRealtime(), 5 * 1000, alarmIntent);
-//        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime(),5*1000,alarmIntent);
-
 
         }
 
+    }
 
 
+    void settingAlarmOnDays(int y, int dayOfWeek, int k) {
+
+        Intent intent = new Intent(EditAlarmActivity.this, AlarmReciever.class);
+        Calendar now = Calendar.getInstance();
+        long _alarm = 0;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, mSelectedHour);
+        calendar.set(Calendar.MINUTE, mSelectedMinute);
+        calendar.set(Calendar.SECOND, 0);
+        Log.d("timmmmm", "now tim: " + now.getTimeInMillis());
+        calendar.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        intent.putExtra("request_code", y);
+        if (calendar.getTimeInMillis() <= now.getTimeInMillis()) {
+            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+            Log.d("timmmmm", "set tim: " + _alarm);
+        } else {
+            _alarm = calendar.getTimeInMillis();
+        }
+        alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 1:
+                    Ringtone ringtone = RingtoneManager.getRingtone(this, (Uri) data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI));
+                    String title = ringtone.getTitle(this);
+                    ringtoneText.setText(title);
+                    mRingtoneUri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI).toString();
+                    Log.d("hhhj", "onActivityResult: "+mRingtoneUri);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }

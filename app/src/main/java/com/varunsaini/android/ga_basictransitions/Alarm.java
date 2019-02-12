@@ -13,11 +13,12 @@ public class Alarm {
     public String ringtone_name;
     public int vibrate;
     public int alarm_pending_req_code;
+    public int previous_alarm_state_in_group;
 
     public Alarm(int hour,int minutes,int alarm_state,
                  String days,String group_name,int group_color,
                  int group_state,String alarm_label,String ringtone_name,
-                 int vibrate,int alarm_pending_req_code)
+                 int vibrate,int alarm_pending_req_code,int previous_alarm_state_in_group)
     {
         this.hour = hour;
         this.minutes =  minutes;
@@ -30,6 +31,7 @@ public class Alarm {
         this.ringtone_name = ringtone_name;
         this.vibrate = vibrate;
         this.alarm_pending_req_code = alarm_pending_req_code;
+        this.previous_alarm_state_in_group = previous_alarm_state_in_group;
 
     }
 

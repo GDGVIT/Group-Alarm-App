@@ -18,8 +18,7 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".AllActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_all">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

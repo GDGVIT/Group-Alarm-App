@@ -6,10 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <LinearLayout
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:padding="24dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
@@ -55,8 +52,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="9dp"
             app:cardElevation="5dp">
@@ -84,20 +81,20 @@
 
                         android:textStyle="bold" />
 
-                    <com.rm.rmswitch.RMSwitch
-                        android:id="@+id/rm_switch1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginRight="14dp"
-                        app:checked="true"
-                        app:enabled="true"
-                        app:forceAspectRatio="false"
-                        app:switchBkgCheckedColor="@color/twentyFivePercentVisible"
-                        app:switchBkgNotCheckedColor="@color/twentyFivePercentVisible"
-                        app:switchDesign="android"
-                        app:switchToggleCheckedColor="#ffffff"
-                        app:switchToggleNotCheckedColor="#000000" />
+                    <!--<com.rm.rmswitch.RMSwitch-->
+                        <!--android:id="@+id/rm_switch1"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_gravity="center_vertical"-->
+                        <!--android:layout_marginRight="14dp"-->
+                        <!--app:checked="true"-->
+                        <!--app:enabled="true"-->
+                        <!--app:forceAspectRatio="false"-->
+                        <!--app:switchBkgCheckedColor="@color/twentyFivePercentVisible"-->
+                        <!--app:switchBkgNotCheckedColor="@color/twentyFivePercentVisible"-->
+                        <!--app:switchDesign="android"-->
+                        <!--app:switchToggleCheckedColor="#ffffff"-->
+                        <!--app:switchToggleNotCheckedColor="#000000" />-->
                 </LinearLayout>
 
                 <TextView
@@ -135,7 +132,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginLeft="4dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             android:layout_marginBottom="16dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
@@ -154,7 +151,7 @@
                             android:id="@+id/buttonTue"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
 
@@ -172,7 +169,7 @@
                             android:id="@+id/buttonWed"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
 
@@ -190,7 +187,7 @@
                             android:id="@+id/buttonThurs"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
 
@@ -208,7 +205,7 @@
                             android:id="@+id/buttonFri"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
 
@@ -226,7 +223,7 @@
                             android:id="@+id/buttonSat"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
 
@@ -244,7 +241,7 @@
                             android:id="@+id/buttonSun"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_marginRight="8dp"
+                            android:layout_marginRight="6dp"
                             app:cardCornerRadius="20dp"
                             app:cardElevation="5dp">
 
@@ -290,20 +287,27 @@
                     android:layout_marginBottom="8dp"
                     android:onClick="ringtoneSelect"
                     app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="23dp"
-                    app:cardElevation="5dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="3dp">
 
                     <TextView
+
                         android:id="@+id/ringtoneText"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit ="marquee_forever"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:scrollHorizontally="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="23dp"
-                        android:paddingTop="11dp"
-                        android:paddingRight="50dp"
-                        android:paddingBottom="11dp"
-                        android:text="Ringtone"
+                        android:paddingLeft="30dp"
+                        android:paddingTop="10dp"
+                        android:paddingRight="35dp"
+                        android:paddingBottom="10dp"
+                        android:text="Ringtone Name"
                         android:textColor="@color/pureBlack"
-                        android:textSize="23sp" />
+                        android:textSize="19sp" />
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
@@ -312,20 +316,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="23dp"
-                    app:cardElevation="5dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="3dp">
 
                     <TextView
                         android:id="@+id/vibrateText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="23dp"
-                        android:paddingTop="11dp"
-                        android:paddingRight="50dp"
-                        android:paddingBottom="11dp"
+                        android:paddingLeft="30dp"
+                        android:paddingTop="10dp"
+                        android:paddingRight="35dp"
+                        android:paddingBottom="10dp"
                         android:text="Vibrate"
                         android:textColor="@color/pureBlack"
-                        android:textSize="23sp" />
+                        android:textSize="19sp" />
                 </android.support.v7.widget.CardView>
 
 
@@ -345,11 +349,11 @@
                         app:np_min="0"
                         app:np_orientation="horizontal"
                         app:np_selectedTextColor="@color/fabBlue"
-                        app:np_selectedTextSize="14dp"
+                        app:np_selectedTextSize="18dp"
                         app:np_textColor="#401e59f6"
-                        app:np_textSize="10sp"
+                        app:np_textSize="14sp"
                         app:np_value="0"
-                        app:np_wheelItemCount="19"
+                        app:np_wheelItemCount="13"
                         app:np_width="329dp" />
 
                 </android.support.v7.widget.CardView>
@@ -371,11 +375,11 @@
                         app:np_min="0"
                         app:np_orientation="horizontal"
                         app:np_selectedTextColor="@color/white"
-                        app:np_selectedTextSize="14sp"
+                        app:np_selectedTextSize="18sp"
                         app:np_textColor="@color/tenPercentVisibleBlue"
-                        app:np_textSize="10sp"
+                        app:np_textSize="14sp"
                         app:np_value="0"
-                        app:np_wheelItemCount="19"
+                        app:np_wheelItemCount="15"
                         app:np_width="329dp" />
 
                 </android.support.v7.widget.CardView>
@@ -387,6 +391,7 @@
         <android.support.design.widget.FloatingActionButton
             android:onClick="setAlarmOn"
             android:id="@+id/fab"
+            app:elevation="3dp"
             app:backgroundTint="@color/fabBlue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

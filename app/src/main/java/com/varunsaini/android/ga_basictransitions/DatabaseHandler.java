@@ -31,6 +31,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ALARM_PENDING_REQ_CODE = "alarm_pending_req_code";
     private static final String DAYS_TABLE_NAME = "days_alarm";
     private static final String KEY_DAYS_REQUEST_CODE = "days_req_code";
+    private static final String KEY_PREVIOUS_STATE = "previous_alarm_state";
 
 
     public DatabaseHandler(Context context) {
@@ -51,7 +52,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 KEY_ALARM_LABEL + " TEXT,"+
                 KEY_RINGTONE_NAME + " TEXT,"+
                 KEY_VIBRATE + " INTEGER,"+
-                KEY_ALARM_PENDING_REQ_CODE + " INTEGER PRIMARY KEY )";
+                KEY_ALARM_PENDING_REQ_CODE + " INTEGER PRIMARY KEY  ,"
+                +KEY_PREVIOUS_STATE + " INTEGER )";
         db.execSQL(CREATE_ALARM_TABLE);
         Log.d("create", "onCreate: "+CREATE_ALARM_TABLE);
 
@@ -109,7 +111,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (c != null && c.moveToFirst()){
             do {
                 Log.d("asa", "onCreate: "+c.getInt(hoursIndex)+":"+c.getInt(minutesIndex)+":"+c.getString(groupName)+":"+c.getInt(alarmState));
-                String time = c.getInt(hoursIndex)+":"+c.getInt(minutesIndex);
+                int hour = c.getInt(hoursIndex);
+                int min = c.getInt(minutesIndex);
+                String hourString;
+                String minString;
+                if(hour==0||hour==1||hour==2||hour==3||hour==4||hour==5||hour==6||hour==7||hour==8||hour==9){
+                    hourString = "0" + hour;
+                }else{
+                    hourString = String.valueOf(hour);
+                }
+
+                if(min==0||min==1||min==2||min==3||min==4||min==5||min==6||min==7||min==8||min==9){
+                    minString = "0" + min;
+                }else{
+                    minString = String.valueOf(min);
+                }
+
+                String time = hourString + ":" + minString;
                 String groupNamee = c.getString(groupName);
                 int alarmStatee = c.getInt(alarmState);
                 int alarmPendingReqCodee = c.getInt(alarmPendingReqCode);
@@ -173,6 +191,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(TABLE_NAME, cv, KEY_ALARM_PENDING_REQ_CODE+"="+request_id, null);
     }
 
+
+    public void updateGroupState(String groupName,int newState) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_GROUP_STATE,newState); //These Fields should be your String values of actual column names
+        db.update(TABLE_NAME, cv, KEY_GROUP_NAME+" = '"+ groupName + "'" , null);
+    }
+
     public String[] getAllPreviousEditAlarmData(int request_id){
         String requestQuery = "SELECT * "  + " FROM " +
                 TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + "="+request_id;
@@ -191,7 +217,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<Group> getGroupActivityGroupList(){
-        String selectQuery = "SELECT DISTINCT " + KEY_GROUP_NAME + " , " + KEY_GROUP_COLOR + " FROM " + TABLE_NAME +
+        String selectQuery = "SELECT DISTINCT " + KEY_GROUP_NAME + " , " + KEY_GROUP_COLOR + ","  + KEY_GROUP_STATE +   " FROM " + TABLE_NAME +
                                 " WHERE " + KEY_GROUP_NAME + " NOT NULL " +" ORDER BY " + KEY_GROUP_NAME ;
         ArrayList<Group> groupArrayList = new ArrayList<>();
 
@@ -202,6 +228,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        int minutesIndex = c.getColumnIndex(KEY_MINUTE);
         int groupName = c.getColumnIndex(KEY_GROUP_NAME);
         int groupColor = c.getColumnIndex(KEY_GROUP_COLOR);
+        int groupState = c.getColumnIndex(KEY_GROUP_STATE);
 
 
         if (c != null && c.moveToFirst()) {
@@ -218,7 +245,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 int i=0;
                 if(c1 != null && c1.moveToFirst()){
                     do{
-                        s[i] = c1.getString(0) + ":" + c1.getString(1);
+                        int hour = c1.getInt(0);
+                        int min = c1.getInt(1);
+                        String hourString;
+                        String minString;
+                        if(hour==0||hour==1||hour==2||hour==3||hour==4||hour==5||hour==6||hour==7||hour==8||hour==9){
+                            hourString = "0" + hour;
+                        }else{
+                            hourString = String.valueOf(hour);
+                        }
+
+                        if(min==0||min==1||min==2||min==3||min==4||min==5||min==6||min==7||min==8||min==9){
+                            minString = "0" + min;
+                        }else{
+                            minString = String.valueOf(min);
+                        }
+
+                        s[i] = hourString + ":" + minString;
                         i++;
                         if(i==3){
                             int j=-1;
@@ -237,7 +280,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                     }while (c1.moveToNext());
                 }
-                groupArrayList.add(new Group(c.getString(groupName),s[0],s[1],s[2],s[3],1,c.getInt(groupColor),false));//1 is used as placeholder
+                groupArrayList.add(new Group(c.getString(groupName),s[0],s[1],s[2],s[3],c.getInt(groupState),c.getInt(groupColor),false));//1 is used as placeholder
             } while (c.moveToNext());
         }
 
@@ -284,7 +327,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(TABLE_NAME, cv, KEY_GROUP_NAME + "= '" + groupName + "'", null);
     }
 
-    public void updataAllAlarmData(int mSelectedHour,int mSelectedMinute,int alarm_state,String days,String labelText,String mRingtoneUri,int vibrate,int alarm_pending_req_code) {
+    public void changePreviousAlarmState(int request_code,int whatToPutInPreviousState){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_PREVIOUS_STATE,whatToPutInPreviousState);
+        db.update(TABLE_NAME,cv,KEY_ALARM_PENDING_REQ_CODE  +  " = " + request_code,null);
+    }
+
+    public void updataAllAlarmData(int mSelectedHour,int mSelectedMinute,int alarm_state,String days,String labelText,String mRingtoneUri,int vibrate,int alarm_pending_req_code,int previous_alarm_state_in_group) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_HOUR,mSelectedHour);
@@ -294,6 +344,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cv.put(KEY_ALARM_LABEL,labelText);
         cv.put(KEY_RINGTONE_NAME,mRingtoneUri);
         cv.put(KEY_VIBRATE,vibrate);
+        cv.put(KEY_PREVIOUS_STATE,previous_alarm_state_in_group);
         db.update(TABLE_NAME, cv, KEY_ALARM_PENDING_REQ_CODE+"="+alarm_pending_req_code, null);
 
 
@@ -302,7 +353,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<GroupInfo> getAllGroupInfo(String groupName) {
 
         ArrayList<GroupInfo> groupInfoArrayList = new ArrayList<>();
-        String selectQuery = "SELECT " + KEY_HOUR + "," + KEY_MINUTE + "," + KEY_ALARM_STATE + "," + KEY_ALARM_PENDING_REQ_CODE
+        String selectQuery = "SELECT " + KEY_HOUR + "," + KEY_MINUTE + "," + KEY_ALARM_STATE + "," + KEY_ALARM_PENDING_REQ_CODE + "," + KEY_PREVIOUS_STATE
                 + " FROM " + TABLE_NAME +
                 " WHERE " + KEY_GROUP_NAME + " = " + "'" + groupName + "'" + " ORDER BY " +  KEY_HOUR + "," + KEY_MINUTE ;
 
@@ -313,14 +364,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int minIndex = c.getColumnIndex(KEY_MINUTE);
         int alarmStateIndex = c.getColumnIndex(KEY_ALARM_STATE);
         int reqCodeIndex = c.getColumnIndex(KEY_ALARM_PENDING_REQ_CODE);
+        int previousState = c.getColumnIndex(KEY_PREVIOUS_STATE);
 
         if (c != null && c.moveToFirst()) {
             do {
+                int hour = c.getInt(hoursIndex);
+                int min = c.getInt(minIndex);
+                String hourString;
+                String minString;
+                if(hour==0||hour==1||hour==2||hour==3||hour==4||hour==5||hour==6||hour==7||hour==8||hour==9){
+                    hourString = "0" + hour;
+                }else{
+                    hourString = String.valueOf(hour);
+                }
 
-                String time = c.getInt(hoursIndex) + ":" + c.getInt(minIndex);int alarmState = c.getInt(alarmStateIndex);
+                if(min==0||min==1||min==2||min==3||min==4||min==5||min==6||min==7||min==8||min==9){
+                    minString = "0" + min;
+                }else{
+                    minString = String.valueOf(min);
+                }
+
+                String time = hourString + ":" + minString;
+                int alarmState = c.getInt(alarmStateIndex);
                 int requestCode = c.getInt(reqCodeIndex);
 
-                groupInfoArrayList.add(new GroupInfo(time,alarmState,requestCode));
+                groupInfoArrayList.add(new GroupInfo(time,alarmState,requestCode,c.getInt(previousState),false));
 
             } while (c.moveToNext());
         }
@@ -364,6 +432,54 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.moveToFirst();
         return (c.getInt(0));
 
+    }
+
+
+    public int getGroupStateByGroupName(String groupName) {
+
+        String selectQuery = "SELECT " + KEY_GROUP_STATE
+                + " FROM " + TABLE_NAME +
+                " WHERE " + KEY_GROUP_NAME + " = " + "'" + groupName + "'" ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            Cursor c = db.rawQuery(selectQuery, null);
+            c.moveToFirst();
+            return (c.getInt(0));
+        }catch (Exception e){
+            return -1;       }
+
+    }
+
+    public String getAlarmTimeFromAlarmRequestId(int trimmed_request_id){
+        String requestQuery = "SELECT " + KEY_HOUR+ "," + KEY_MINUTE + " FROM " +
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + " LIKE '%" + trimmed_request_id + "%'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(requestQuery,null);
+        c.moveToFirst();
+        return  c.getInt(0)+ ":" + c.getInt(1);
+
+    }
+
+    public String getGroupNameByRequestId(int request_id){
+        String requestQuery = "SELECT " + KEY_GROUP_NAME + " FROM " +
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + " = " +request_id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(requestQuery,null);
+        c.moveToFirst();
+        return c.getString(0);
+    }
+
+    public int getGroupColorByTrimmedRequestId(int trimmed_request_id){
+        String requestQuery = "SELECT " + KEY_GROUP_COLOR + " FROM " +
+                TABLE_NAME + " WHERE " + KEY_ALARM_PENDING_REQ_CODE + " LIKE '%" + trimmed_request_id + "%'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(requestQuery,null);
+        c.moveToFirst();
+        return  c.getInt(0);
     }
 
     /////////////////////////////////////////////////////////////////////////

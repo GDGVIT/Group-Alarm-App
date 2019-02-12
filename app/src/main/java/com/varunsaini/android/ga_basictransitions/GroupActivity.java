@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.rm.rmswitch.RMSwitch;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class GroupActivity extends AppCompatActivity {
@@ -50,6 +51,7 @@ public class GroupActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     FloatingActionButton fabAddGroup,fabDeleteGroup,fabCancel;
     RecyclerView.LayoutManager layoutManager;
+    private PendingIntent[] alarmIntent1;
     SQLiteDatabase sqLiteDatabase;
     DatabaseHandler db;
     NestedScrollView scrollView;
@@ -88,11 +90,6 @@ public class GroupActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view_group);
         recyclerView.setHasFixedSize(true);
 
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.custom_main_action_bar_layout);
-//        View view =getSupportActionBar().getCustomView();
-
         TextView title = findViewById(R.id.title);
         title.setTypeface(tf);
 
@@ -102,21 +99,11 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = (new Intent(GroupActivity.this,AllActivity.class));
-//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
-//        CardView groupCard = findViewById(R.id.group_card);
-//        groupCard.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent i = new Intent(GroupActivity.this,AboutGroupActivity.class);
-//                startActivity(i);
-//            }
-//        });
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -127,29 +114,6 @@ public class GroupActivity extends AppCompatActivity {
 
         final GroupRecyclerViewAdapter groupObject = new GroupRecyclerViewAdapter(groupArrayList);
 
-//        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-//            @SuppressLint("RestrictedApi")
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                if(!groupObject.atLeastOneSelected){
-//                    fabDeleteGroup.setVisibility(View.GONE);
-//                    fabCancel.setVisibility(View.GONE);
-//                    fabAddGroup.setVisibility(View.VISIBLE);
-//                }
-//            }
-//
-//            @SuppressLint({"RestrictedApi", "ResourceAsColor"})
-//            @Override
-//            public void onLongItemClick(View view, int position) {
-//
-//                    fabDeleteGroup.setVisibility(View.GONE);
-//                    fabCancel.setVisibility(View.GONE);
-//                    fabAddGroup.setVisibility(View.VISIBLE);
-//
-//
-//
-//            }
-//        }));
     }
 
     public void addGroup(View view) {
@@ -229,6 +193,48 @@ public class GroupActivity extends AppCompatActivity {
             }else{
                 groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
             }
+
+            ///////starting from here
+            if(ff==1){
+                groupRecyclerViewHolder.rmsSwitch.setChecked(true);
+            }else{
+                groupRecyclerViewHolder.rmsSwitch.setChecked(false);
+            }
+
+            groupRecyclerViewHolder.rmsSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, AlarmReciever.class);
+                    alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                    ArrayList<GroupInfo> groupInfoArrayList = db.getAllGroupInfo(aa);
+                    if(groupRecyclerViewHolder.rmsSwitch.isChecked()){
+                        groupRecyclerViewHolder.rmsSwitch.setChecked(false);
+                        for(int i=0;i<groupInfoArrayList.size();i++){
+                            ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(groupInfoArrayList.get(i).alarm_pending_req_code).substring(3,9)));
+                            for(Integer ii : integerArrayList) {
+                                PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(ii), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                alarmMgr.cancel(alarmIntent);
+                            }
+                            db.changePreviousAlarmState(groupInfoArrayList.get(i).alarm_pending_req_code,groupInfoArrayList.get(i).alarm_state);
+                            db.updateAlarmState(groupInfoArrayList.get(i).alarm_pending_req_code,0);
+                        }
+                        db.updateGroupState(aa,0);
+                        Toast.makeText(context, "Group Turned Off", Toast.LENGTH_SHORT).show();
+                    }else{
+                        groupRecyclerViewHolder.rmsSwitch.toggle();
+                        for (int i=0;i<groupInfoArrayList.size();i++){
+                            if(groupInfoArrayList.get(i).alarm_previous_state==1) {
+                                setAlarmsOnToggle(db.getDaysToRing(groupInfoArrayList.get(i).alarm_pending_req_code), groupInfoArrayList.get(i).alarm_pending_req_code);
+                                db.updateAlarmState(groupInfoArrayList.get(i).alarm_pending_req_code,1);
+                            }
+                            db.changePreviousAlarmState(groupInfoArrayList.get(i).alarm_pending_req_code,-1);
+                        }
+                        groupRecyclerViewHolder.rmsSwitch.setChecked(true);
+                        db.updateGroupState(aa,1);
+                        Toast.makeText(context, "Group Turned On", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             
             fabCancel.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("RestrictedApi")
@@ -271,12 +277,13 @@ public class GroupActivity extends AppCompatActivity {
                             }
                             db.removeDaysPendingReq(Integer.valueOf(String.valueOf(request_code).substring(3,9)));
                         }
-                        numberOfGroupsSelected--;
                         db.deleteAGroup(s.get(intString.get(i)).groupName);
                         s.remove(intString.get(i).intValue());
                         notifyItemRemoved(intString.get(i));
 //                        notifyDataSetChanged();
                     }
+                    numberOfGroupsSelected = 0;
+                    atLeastOneSelected = false;
                     fabDeleteGroup.setVisibility(View.GONE);
                     fabCancel.setVisibility(View.GONE);
                     fabAddGroup.setVisibility(View.VISIBLE);
@@ -325,6 +332,7 @@ public class GroupActivity extends AppCompatActivity {
 
                     if(!model.isSelected && atLeastOneSelected){
                         numberOfGroupsSelected++;
+                        groupRecyclerViewHolder.rmsSwitch.setVisibility(View.INVISIBLE);
                         model.setSelected(true);
                         groupRecyclerViewHolder.groupColor.setBackgroundResource(R.color.selectedGroupGray);
                         intString.add(i);
@@ -333,6 +341,7 @@ public class GroupActivity extends AppCompatActivity {
                         numberOfGroupsSelected--;
                         model.setSelected(false);
                         int pos = intString.indexOf(i);
+                        groupRecyclerViewHolder.rmsSwitch.setVisibility(View.VISIBLE);
                         intString.remove(pos);
                         if(model.groupColor==1){
                             groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_purple);
@@ -402,6 +411,7 @@ public class GroupActivity extends AppCompatActivity {
                 @Override
                 public boolean onLongClick(View v) {
                     if(!oneTimeLongTapped) {
+                        groupRecyclerViewHolder.rmsSwitch.setVisibility(View.INVISIBLE);
                         atLeastOneSelected = true;
                         model.setSelected(true);
                         numberOfGroupsSelected++;
@@ -462,11 +472,141 @@ public class GroupActivity extends AppCompatActivity {
             }
             
         }
-        
-        
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        public void setAlarmsOnToggle(String daystoRing, int alarm_pending_req_code) {
+            db = new DatabaseHandler(context);
+            sqLiteDatabase = context.openOrCreateDatabase("Alarm", MODE_PRIVATE, null);
+            db.onCreate(sqLiteDatabase);
+            alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent(context, AlarmReciever.class);
 
+            int[] hourMin = db.getHoursMin(alarm_pending_req_code);
+            Calendar now = Calendar.getInstance();
+            long _alarm = 0;
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hourMin[0]);
+            calendar.set(Calendar.MINUTE, hourMin[1]);
+            calendar.set(Calendar.SECOND, 0);
+
+            if (!daystoRing.equals("")) {
+                String[] dayys = daystoRing.split("#");
+                alarmIntent1 = new PendingIntent[dayys.length];
+                int[] allRequests = new int[dayys.length];
+                int k = 0;
+
+                alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
+                for (Integer i : integerArrayList) {
+                    PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmMgr.cancel(alarmIntent);
+                }
+
+                for (String d : dayys) {
+                    if (d.equals("mon")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("111"+x.substring(3,9) );
+                        calendar.set(Calendar.DAY_OF_WEEK, 2);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis()) {
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        } else {
+                            _alarm = calendar.getTimeInMillis();
+                        }
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    } else if (d.equals("tue")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("222"+x.substring(3,9));
+                        calendar.set(Calendar.DAY_OF_WEEK, 3);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis()) {
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        } else {
+                            _alarm = calendar.getTimeInMillis();
+                        }
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    } else if (d.equals("wed")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("333"+x.substring(3,9));
+                        calendar.set(Calendar.DAY_OF_WEEK, 4);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis())
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        else
+                            _alarm = calendar.getTimeInMillis();
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    } else if (d.equals("thurs")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("444"+x.substring(3,9));
+                        calendar.set(Calendar.DAY_OF_WEEK, 5);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis()) {
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        } else {
+                            _alarm = calendar.getTimeInMillis();
+                        }
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    } else if (d.equals("fri")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("555"+x.substring(3,9));
+                        calendar.set(Calendar.DAY_OF_WEEK, 6);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis())
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        else
+                            _alarm = calendar.getTimeInMillis();
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    } else if (d.equals("sat")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("666"+x.substring(3,9));
+                        calendar.set(Calendar.DAY_OF_WEEK, 7);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis())
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        else
+                            _alarm = calendar.getTimeInMillis();
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    } else if (d.equals("sun")) {
+                        String x = String.valueOf(alarm_pending_req_code);
+                        int y = Integer.valueOf("777"+x.substring(3,9));
+                        calendar.set(Calendar.DAY_OF_WEEK, 1);
+                        intent.putExtra("request_code", y);
+                        if (calendar.getTimeInMillis() <= now.getTimeInMillis()) {
+                            _alarm = calendar.getTimeInMillis() + (24 * 60 * 60 * 1000 * 7);
+                        } else {
+                            _alarm = calendar.getTimeInMillis();
+                        }
+                        alarmIntent1[k] = PendingIntent.getBroadcast(context, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent1[k]);
+                        allRequests[k] = y;
+                        k++;
+                    }
+                }
+
+            }
+        }
 
     }
+
+
 
 
 }

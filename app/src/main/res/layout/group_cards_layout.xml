@@ -7,8 +7,8 @@
     android:layout_marginBottom="16dp"
     android:layout_marginLeft="24dp"
     android:layout_marginRight="24dp"
-    app:cardCornerRadius="9dp"
-    app:cardElevation="5dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="3dp"
     android:clickable="true"
     android:focusable="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -47,8 +47,8 @@
 
                 <com.rm.rmswitch.RMSwitch
                     android:id="@+id/all_switch"
-                    android:layout_width="60dp"
-                    android:layout_height="29sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     app:checked="true"
                     app:enabled="true"

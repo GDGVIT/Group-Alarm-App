@@ -50,7 +50,7 @@
                 android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@color/fabBlue"
                 app:cardCornerRadius="21dp"
-                app:cardElevation="10dp">
+                app:cardElevation="3dp">
 
                 <TextView
                     android:id="@+id/all_all_text"
@@ -75,7 +75,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="21dp"
-                app:cardElevation="10dp">
+                app:cardElevation="3dp">
 
                 <TextView
                     android:id="@+id/all_group_text"

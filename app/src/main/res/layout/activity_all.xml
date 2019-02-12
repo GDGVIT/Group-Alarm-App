@@ -25,6 +25,7 @@
     <include layout="@layout/content_all" />
 
     <android.support.design.widget.FloatingActionButton
+        app:elevation="3dp"
         android:id="@+id/fabAddAlarm"
         android:onClick="newAlarm"
         app:backgroundTint="@color/fabBlue"
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.FloatingActionButton
+            app:elevation="3dp"
             android:id="@+id/fabDeleteAlarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,6 +53,7 @@
             app:srcCompat="@drawable/bin" />
 
         <android.support.design.widget.FloatingActionButton
+            app:elevation="3dp"
             android:id="@+id/fabCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

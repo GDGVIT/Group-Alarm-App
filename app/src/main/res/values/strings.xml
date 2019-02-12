@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GA_basic transitions</string>
+    <string name="app_name">Group-Alarm</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_all">AllActivity</string>
     <string name="title_activity_group">GroupActivity</string>

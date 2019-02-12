@@ -2,117 +2,176 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/list_grad_purple"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="@drawable/list_grad_purple"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".AlarmRingActivity">
     <!--tools:showIn="@layout/activity_alarm_ring">-->
     <!--<android.support.v7.widget.CardView-->
-        <!--app:cardElevation="10dp"-->
-        <!--app:cardCornerRadius="20dp"-->
-        <!--android:onClick="snoozeAlarm"-->
-        <!--app:cardBackgroundColor="@color/white"-->
-        <!--android:layout_marginTop="139dp"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-<!--&gt;-->
+    <!--app:cardElevation="10dp"-->
+    <!--app:cardCornerRadius="20dp"-->
+    <!--android:onClick="snoozeAlarm"-->
+    <!--app:cardBackgroundColor="@color/white"-->
+    <!--android:layout_marginTop="139dp"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--&gt;-->
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Snooze"-->
-            <!--android:textSize="27sp"-->
-            <!--android:paddingRight="37dp"-->
-            <!--android:paddingLeft="37dp"-->
-            <!--android:paddingBottom="21dp"-->
-            <!--android:paddingTop="21dp"-->
-            <!--/>-->
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Snooze"-->
+    <!--android:textSize="27sp"-->
+    <!--android:paddingRight="37dp"-->
+    <!--android:paddingLeft="37dp"-->
+    <!--android:paddingBottom="21dp"-->
+    <!--android:paddingTop="21dp"-->
+    <!--/>-->
 
     <!--</android.support.v7.widget.CardView>-->
     <!--<TextView-->
-        <!--android:onClick="dismissAlarm"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="189dp"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:text="Close"-->
-        <!--android:textSize="27sp"-->
-        <!--android:textColor="@color/white"/>-->
+    <!--android:onClick="dismissAlarm"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="189dp"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:text="Close"-->
+    <!--android:textSize="27sp"-->
+    <!--android:textColor="@color/white"/>-->
 
     <TextView
         android:id="@+id/snoozeText"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Snooze"
-        android:padding="16dp"
-        android:textColor="@color/white"
-        android:textSize="27sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="64dp"
+        android:padding="16dp"
+        android:text="Snooze"
+        android:textColor="@color/white"
+        android:textSize="27sp" />
 
-    <!--<ImageView-->
-        <!--android:layout_alignBottom="@id/snoozeText"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/baseline_arrow_drop_up_white_18dp"-->
-        <!--android:layout_gravity="center_horizontal"/>-->
-    <!--<ImageView-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/baseline_arrow_drop_up_white_18dp"-->
-        <!--android:layout_gravity="center_horizontal"/>-->
-    <!--<ImageView-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/baseline_arrow_drop_up_white_18dp"-->
-        <!--android:layout_gravity="center_horizontal"/>-->
-    <!--<ImageView-->
-        <!--android:layout_marginTop="8dp"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/baseline_arrow_drop_up_white_18dp"-->
-        <!--android:layout_gravity="center_horizontal"/>-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/action_button"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/oneUpArrow"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_up_white_18dp" />
+
+        <ImageView
+            android:id="@+id/twoUpArrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_up_white_18dp" />
+
+        <ImageView
+            android:id="@+id/threeUpArrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_up_white_18dp" />
+
+        <ImageView
+            android:id="@+id/fourUpArrow"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_up_white_18dp" />
+    </LinearLayout>
 
     <TextView
-        android:layout_centerInParent="true"
         android:id="@+id/action_button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/circle_white_textview"
-        android:layout_gravity="center"/>
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:background="@drawable/circle_action_textview" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/action_button"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/oneDownArrow"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_down_white_18dp" />
+
+        <ImageView
+            android:id="@+id/twoDownArrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_down_white_18dp" />
+
+        <ImageView
+            android:id="@+id/threeDownArrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_down_white_18dp" />
+
+        <ImageView
+            android:id="@+id/fourDownArrow"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/baseline_arrow_drop_down_white_18dp" />
+
+
+    </LinearLayout>
+
 
     <!--<TextView-->
-        <!--android:id="@+id/cancelText"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="27dp"-->
-        <!--android:layout_below="@id/action_button"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_centerHorizontal="true"-->
+    <!--android:id="@+id/cancelText"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="27dp"-->
+    <!--android:layout_below="@id/action_button"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerHorizontal="true"-->
 
-        <!--android:padding="16dp"-->
-        <!--android:text="Cancel"-->
-        <!--android:textColor="@color/white"-->
-        <!--android:textSize="27sp" />-->
+    <!--android:padding="16dp"-->
+    <!--android:text="Cancel"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="27sp" />-->
 
     <TextView
         android:id="@+id/cancelText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:textSize="27sp"
-        android:layout_marginBottom="32dp"
-        android:padding="16dp"
-        android:textColor="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_marginBottom="64dp"
+        android:padding="16dp"
+        android:text="Cancel"
+        android:textColor="@color/white"
+        android:textSize="27sp" />
 
 </RelativeLayout>

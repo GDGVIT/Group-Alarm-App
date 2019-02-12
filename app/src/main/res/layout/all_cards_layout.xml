@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/allCard"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="5dp"
+    app:cardElevation="3dp"
     app:cardCornerRadius="20dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="16dp"
@@ -55,6 +55,7 @@
             </LinearLayout>
 
             <TextView
+                android:layout_marginTop="4dp"
                 android:id="@+id/daysToRing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
