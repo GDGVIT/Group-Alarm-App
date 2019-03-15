@@ -29,6 +29,7 @@
                 >
 
                 <TextView
+                    android:transitionName="time"
                     android:id="@+id/time"
                     android:textSize="25sp"
                     android:textStyle="bold"

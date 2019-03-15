@@ -2,6 +2,7 @@ package com.varunsaini.android.ga_basictransitions;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,9 +39,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.cuboid.cuboidcirclebutton.CuboidButton;
-import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
-import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 import com.rm.rmswitch.RMSwitch;
 import com.shawnlin.numberpicker.NumberPicker;
 
@@ -48,6 +47,9 @@ import org.w3c.dom.Text;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import static android.media.RingtoneManager.getDefaultUri;
 
 public class EditAlarmActivity extends AppCompatActivity {
 
@@ -79,6 +81,7 @@ public class EditAlarmActivity extends AppCompatActivity {
     NestedScrollView scrollView;
     int alarmPreviousStateInGroup;
     String hourString,minString ;
+    NotificationManager nMgr;
 
 
     SQLiteDatabase sqLiteDatabase;
@@ -326,7 +329,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 
 
             if (allpreviousAlarmData[4] != null) {
-                groupNameTitle.setText(allpreviousAlarmData[4]);
+//                groupNameTitle.setText(allpreviousAlarmData[4]);
             }
             labelEdittext.setText(allpreviousAlarmData[7]);
             min_picker.setValue(Integer.parseInt(allpreviousAlarmData[1]));
@@ -464,32 +467,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 
 
     public void ringtoneSelect(View view) {
-//        RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
-//                .Builder(EditAlarmActivity.this, getSupportFragmentManager())
-//
-//                .setTitle("Select ringtone")
-//                .setCurrentRingtoneUri(null)
-//                .displayDefaultRingtone(true)
-//
-//                //Set true to allow user to select silent (i.e. No ringtone.).
-//                .displaySilentRingtone(true)
-//                .setPositiveButtonText("SET RINGTONE")
-//                .setCancelButtonText("CANCEL")
-//                .setPlaySampleWhileSelection(true)
-//                .setListener(new RingtonePickerListener() {
-//                    @Override
-//                    public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
-//                        mRingtoneUri = ringtoneUri.toString();
-//                    }
-//                });
-//
-//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_NOTIFICATION);
-//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_RINGTONE);
-//        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM);
-//
-////Display the dialog.
-//        ringtonePickerBuilder.show();
-//
+
         //////////////////////////////////////////
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone for alarm:");
@@ -545,6 +523,8 @@ public class EditAlarmActivity extends AppCompatActivity {
                 alarm_state = 1;
             }
             db.updataAllAlarmData(mSelectedHour, mSelectedMinute, alarm_state, daystoRing, labelText, mRingtoneUri, mVibrate, alarm_pending_req_code, -1);
+            db.changeGroupName(allpreviousAlarmData[4],groupName);
+            db.changeGroupColor(groupName,groupColor);
             alarmMgr = (AlarmManager) EditAlarmActivity.this.getSystemService(Context.ALARM_SERVICE);
 
 
@@ -560,47 +540,49 @@ public class EditAlarmActivity extends AppCompatActivity {
                 Intent intent = new Intent(EditAlarmActivity.this, AlarmReciever.class);
 
                 alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3, 9)));
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
                 for (Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(this, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
+                    nMgr = (NotificationManager)getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
+                    nMgr.cancel(Integer.valueOf(i));
                 }
+
                 String x = String.valueOf(alarm_pending_req_code);
 
                 for (String d : dayys) {
                     if (d.equals("mon")) {
-                        int y = Integer.valueOf("111" + x.substring(3, 9));
+                        int y = Integer.valueOf("111" + x.substring(3,9));
                         settingAlarmOnDays(y, 2, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("tue")) {
-                        int y = Integer.valueOf("222" + x.substring(3, 9));
+                        int y = Integer.valueOf("222" + x.substring(3,9));
                         settingAlarmOnDays(y, 3, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("wed")) {
-                        int y = Integer.valueOf("333" + x.substring(3, 9));
+                        int y = Integer.valueOf("333" + x.substring(3,9));
                         settingAlarmOnDays(y, 4, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("thurs")) {
-                        int y = Integer.valueOf("444" + x.substring(3, 9));
+                        int y = Integer.valueOf("444" + x.substring(3,9));
                         settingAlarmOnDays(y, 5, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("fri")) {
-                        int y = Integer.valueOf("555" + x.substring(3, 9));
+                        int y = Integer.valueOf("555" + x.substring(3,9));
                         settingAlarmOnDays(y, 6, k);
-
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sat")) {
-                        int y = Integer.valueOf("666" + x.substring(3, 9));
+                        int y = Integer.valueOf("666" + x.substring(3,9));
                         settingAlarmOnDays(y, 7, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sun")) {
-                        int y = Integer.valueOf("777" + x.substring(3, 9));
+                        int y = Integer.valueOf("777" + x.substring(3,9));
                         settingAlarmOnDays(y, 1, k);
                         allRequests[k] = y;
                         k++;
@@ -608,11 +590,16 @@ public class EditAlarmActivity extends AppCompatActivity {
                 }
 
 
-                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3, 9)));
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,9)));
                 for (int i = 0; i < dayys.length; i++) {
                     db.addDaysPendingReq(allRequests[i]);
                 }
-
+//                Toast.makeText(this, "Alarm set for " + String.format("%02d:%02d:%02d",
+//                        TimeUnit.MILLISECONDS.toHours(_alarm),
+//                        TimeUnit.MILLISECONDS.toMinutes(_alarm) -
+//                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(_alarm)), // The change is in this line
+//                        TimeUnit.MILLISECONDS.toSeconds(_alarm) -
+//                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(_alarm))), Toast.LENGTH_SHORT).show();
 
             }
             if (daystoRing.equals("")) {
@@ -632,7 +619,6 @@ public class EditAlarmActivity extends AppCompatActivity {
                 alarm_state = 1;
             }
 
-//                Alarm a = new Alarm(mSelectedHour, mSelectedMinute, 1, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, mVibrate, currentTimeInMilliSeconds,-1);
             Log.d("CMS", "setAlarmOn: " + currentTimeInMilliSeconds);
 
             alarmMgr = (AlarmManager) EditAlarmActivity.this.getSystemService(Context.ALARM_SERVICE);
@@ -653,37 +639,37 @@ public class EditAlarmActivity extends AppCompatActivity {
                     int k = 0;
                     for (String d : dayys) {
                         if (d.equals("mon")) {
-                            int y = Integer.valueOf("111" + x.substring(3, 9));
+                            int y = Integer.parseInt("111" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 2, k);
                             k++;
                         } else if (d.equals("tue")) {
-                            int y = Integer.valueOf("222" + x.substring(3, 9));
+                            int y = Integer.parseInt("222" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 3, k);
                             k++;
                         } else if (d.equals("wed")) {
-                            int y = Integer.valueOf("333" + x.substring(3, 9));
+                            int y = Integer.parseInt("333" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 4, k);
                             k++;
                         } else if (d.equals("thurs")) {
-                            int y = Integer.valueOf("444" + x.substring(3, 9));
+                            int y = Integer.parseInt("444" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 5, k);
                             k++;
                         } else if (d.equals("fri")) {
-                            int y = Integer.valueOf("555" + x.substring(3, 9));
+                            int y = Integer.parseInt("555" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 6, k);
                             k++;
                         } else if (d.equals("sat")) {
-                            int y = Integer.valueOf("666" + x.substring(3, 9));
+                            int y = Integer.parseInt("666" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 7, k);
                             k++;
                         } else if (d.equals("sun")) {
-                            int y = Integer.valueOf("777" + x.substring(3, 9));
+                            int y = Integer.parseInt("777" + x.substring(3,9));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 1, k);
                             k++;
@@ -699,6 +685,8 @@ public class EditAlarmActivity extends AppCompatActivity {
                 if (groupState == -1) {
                     groupState = 1;
                 }
+
+                db.changeGroupName(getIntent().getStringExtra("previousGroupName"),groupName);
                 Alarm a = new Alarm(mSelectedHour, mSelectedMinute, alarm_state, daystoRing, groupName, groupColor, groupState, labelText, mRingtoneUri, mVibrate, currentTimeInMilliSeconds, -1);
                 db.addAlarm(a);
                 Intent i = new Intent(EditAlarmActivity.this, AllActivity.class);
@@ -730,9 +718,25 @@ public class EditAlarmActivity extends AppCompatActivity {
             Log.d("timmmmm", "set tim: " + _alarm);
         } else {
             _alarm = calendar.getTimeInMillis();
+            Log.d("timmmmm", "else tim: " + _alarm);
         }
         alarmIntent[k] = PendingIntent.getBroadcast(EditAlarmActivity.this, y, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+        }else{
+            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, _alarm, alarmIntent[k]);
+        }
+
+        Intent notifyIntent = new Intent(this,NotificationReciever.class);
+        notifyIntent.putExtra("trimmedRequestId",y);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast
+                (this, y, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  _alarm - (1000*60*60), pendingIntent);
+        }else{
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,  _alarm - (1000*60*60), pendingIntent);
+        }
 
     }
 

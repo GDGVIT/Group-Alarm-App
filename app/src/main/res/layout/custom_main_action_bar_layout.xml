@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:padding="24dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    >
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TableRow>
+    <ImageView
+        android:id="@+id/backActionBar"
+        android:layout_width="30dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_actionbar_back"/>
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Group Alarm"
-            android:textSize="24sp"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/pureBlack"
-            android:textStyle="bold"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1"
-            />
+    <TextView
+        android:id="@+id/titleActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manageGroup"
+        android:gravity="right"
+        android:textColor="@color/pureBlack"
+        android:layout_gravity="center"
+        android:textSize="28sp"/>
 
-    </TableRow>
-
-</TableLayout>
+</LinearLayout>

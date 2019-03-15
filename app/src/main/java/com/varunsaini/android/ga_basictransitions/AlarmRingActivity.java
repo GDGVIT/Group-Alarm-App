@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,8 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.animation.DynamicAnimation;
 import android.support.animation.FlingAnimation;
+import android.support.animation.SpringAnimation;
+import android.support.animation.SpringForce;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -50,20 +53,27 @@ public class AlarmRingActivity extends AppCompatActivity {
     Calendar calendar;
     ImageView oneUpArrow,twoUpArrow,threeUpArrow,fourUpArrow,oneDownArrow,twoDownArrow,threeDownArrow,fourDownArrow;
     int request_id;
+    private float dY,dAY;
+    SpringAnimation springAnimation;
     int backgroundColor;
+    int hour,min;
     Vibrator v;
-    GestureDetector mGestureDetector;
     TextView actionButton,snooozeText,cancelText;
     boolean isTurnedOff = false;
     RectF actionRect,snoozeRect,cancelRect;
     float distanceSnoozeAction,distanceCancelAction;
     RelativeLayout relativeLayout;
+    private static final long NOTIFICATION_ALERT_TIME = 1000*60*60;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_ring);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
 
         request_id = getIntent().getIntExtra("recieved_request_code",-1);
@@ -178,7 +188,15 @@ public class AlarmRingActivity extends AppCompatActivity {
 
 
         DatabaseHandler db = new DatabaseHandler(this);
-        SQLiteDatabase sqLiteDatabase = this.openOrCreateDatabase("Alarmm",MODE_PRIVATE,null);
+
+        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(request_id).substring(3,9)));
+        String[] splittedTime = time.split(":");
+        hour = Integer.parseInt(splittedTime[0]);
+        min = Integer.parseInt(splittedTime[1]);
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,hour);
+        calendar.set(Calendar.MINUTE,min);
+
 
 
 
@@ -219,18 +237,63 @@ public class AlarmRingActivity extends AppCompatActivity {
                 v.vibrate(pattern, 0);}
         }
 
-        mGestureDetector = new GestureDetector(this,new MyGestureListener());
+//        mGestureDetector = new GestureDetector(this,new MyGestureListener());
 
         actionButton.setOnTouchListener(new View.OnTouchListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
+
+                float x = event.getX();
+                float y = event.getY();
+                switch (event.getAction()){
+
+                    case MotionEvent.ACTION_DOWN:
+                        springAnimation = new SpringAnimation(actionButton,DynamicAnimation.TRANSLATION_Y,0);
+                        springAnimation.cancel();
+                        dY = actionButton.getY() - event.getRawY();
+                        dAY = actionButton.getY();
+                        return true;
+
+                    case MotionEvent.ACTION_MOVE:
+                        actionButton.animate().y(event.getRawY() + dY).setDuration(0).start();
+                        if(((event.getRawY()-dAY +dY)>(cancelText.getY() - dAY-cancelText.getTextSize())) && ((event.getRawY()-dAY +dY)<(cancelText.getY() - dAY + cancelText.getTextSize()))){
+                            cancelText.setBackgroundColor(getResources().getColor(R.color.fiftyPercentVisible));
+                        }else{
+                            cancelText.setBackgroundColor(Color.TRANSPARENT);
+                        }
+
+                        if(((event.getRawY()-dAY +dY)>(snooozeText.getY() - dAY-snooozeText.getTextSize())) && ((event.getRawY()-dAY +dY)<(snooozeText.getY() - dAY + snooozeText.getTextSize()))){
+                            snooozeText.setBackgroundColor(getResources().getColor(R.color.fiftyPercentVisible));
+                        }else{
+                            snooozeText.setBackgroundColor(Color.TRANSPARENT);
+                        }
+
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+
+                        springAnimation = new SpringAnimation(actionButton,DynamicAnimation.TRANSLATION_Y,0);
+
+                        if(((event.getRawY()-dAY +dY)>(cancelText.getY() - dAY-cancelText.getTextSize())) && ((event.getRawY()-dAY +dY)<(cancelText.getY() - dAY + cancelText.getTextSize()))){
+                            dismissAlarm();
+                        }
+
+                        if(((event.getRawY()-dAY +dY)>(snooozeText.getY() - dAY-snooozeText.getTextSize())) && ((event.getRawY()-dAY +dY)<(snooozeText.getY() - dAY + snooozeText.getTextSize()))){
+                            snoozeAlarm();
+                        }
+
+                        springAnimation.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_HIGH_BOUNCY).setStiffness(SpringForce.STIFFNESS_MEDIUM);
+                        springAnimation.start();
+                        return true;
+
+                }
+                return false;
             }
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     public void snoozeAlarm(){
         alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(AlarmRingActivity.this, AlarmReciever.class);
@@ -243,14 +306,20 @@ public class AlarmRingActivity extends AppCompatActivity {
         }
         v.cancel();
         alarmMgr.cancel(alarmIntent);
-        finishAndRemoveTask();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask();
+        }
 //        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
         Log.d("HH", "snoozeAlarm: after cancel alarm");
         AlarmManager alarmMgr1 = (AlarmManager)AlarmRingActivity.this.getSystemService(Context.ALARM_SERVICE);
 
-        PendingIntent alarmIntent1 = PendingIntent.getBroadcast(AlarmRingActivity.this, 0, intent, 0);
+        PendingIntent alarmIntent1 = PendingIntent.getBroadcast(AlarmRingActivity.this, request_id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (1000 * 5), alarmIntent1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmMgr1.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ Utils.SNOOZE_TIME, alarmIntent1);
+        }else{
+            alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ Utils.SNOOZE_TIME, alarmIntent1);
+        }
         WakeLocker.release();
         isTurnedOff = true;
         AlarmReciever.isplaying = false;
@@ -258,10 +327,10 @@ public class AlarmRingActivity extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void dismissAlarm() {
         alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(AlarmRingActivity.this, AlarmReciever.class);
+        intent.putExtra("request_code", request_id);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(AlarmRingActivity.this, request_id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Log.d("dismissAlarm", "dismissAlarm: "+request_id);
         AlarmReciever ar = new AlarmReciever();
@@ -271,84 +340,36 @@ public class AlarmRingActivity extends AppCompatActivity {
         v.cancel();
         alarmMgr.cancel(alarmIntent);
         AlarmManager alarmMgr1 = (AlarmManager)AlarmRingActivity.this.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmIntent1 = PendingIntent.getBroadcast(AlarmRingActivity.this, request_id, intent, 0);
-        alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (7*24*60*60*1000), alarmIntent1);
-        finishAndRemoveTask();
+        PendingIntent alarmIntent1 = PendingIntent.getBroadcast(AlarmRingActivity.this, request_id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmMgr1.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ AlarmManager.INTERVAL_DAY*7, alarmIntent1);
+        }else{
+            alarmMgr1.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ AlarmManager.INTERVAL_DAY*7, alarmIntent1);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask();
+        }
         //        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
         WakeLocker.release();
         isTurnedOff = true;
         AlarmReciever.isplaying = false;
 
+        NotificationManager mNotificationManager = (NotificationManager) this.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent notifyIntent = new Intent(this, NotificationReciever.class);
+        notifyIntent.putExtra("trimmedRequestId",request_id);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast
+                (this, request_id, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotificationManager.cancel(request_id);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000) - NOTIFICATION_ALERT_TIME, pendingIntent);
+        }else{
+            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000) - NOTIFICATION_ALERT_TIME, pendingIntent);
+        }
+        Log.d("sas", "onReceive: " + request_id);
+
 
     }
 
-    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final float FRICTION = 0.1f;
-
-        @Override
-        public boolean onDown(MotionEvent event) {
-            Log.d("TAG","onDown: ");
-            return true;
-        }
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            Log.i("TAG", "onSingleTapConfirmed: ");
-//            Toast.makeText(AlarmRingActivity.this, "onSingleTap", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            Log.i("TAG", "onLongPress: ");
-//            Toast.makeText(AlarmRingActivity.this, "onLongPress", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            Log.i("TAG", "onDoubleTap: ");
-            return true;
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2,
-                                float distanceX, float distanceY) {
-            return true;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
-            Log.d("TAG", "onFling: ");
-            float distSnooze = actionButton.getY() - snooozeText.getY();
-            float distCancel = actionButton.getY() - cancelText.getY();
-            float movementY = event1.getY()-event2.getY();
-            float movementX = event1.getX() - event2.getX();
-            FlingAnimation flingY = new FlingAnimation(actionButton, DynamicAnimation.TRANSLATION_Y);
-            flingY.setStartVelocity(velocityY)
-                    .setMinValue(-500)  // minimum translationY property
-                    .setMaxValue(500) // maximum translationY property
-                    .setFriction(FRICTION)
-                    .start();
-            if(Math.abs(movementX)<Math.abs(movementY)){
-                if(Math.abs(movementY)>distanceSnoozeAction){
-                    if(movementY>distanceSnoozeAction) {
-                        snoozeAlarm();
-                        Toast.makeText(AlarmRingActivity.this, "Alarm Snoozed", Toast.LENGTH_SHORT).show();
-                    }else{
-                        dismissAlarm();
-                        Toast.makeText(AlarmRingActivity.this, "Alarm Dismissed", Toast.LENGTH_SHORT).show();
-                    }
-                    }
-            }
-//            Toast.makeText(AlarmRingActivity.this, "onFling", Toast.LENGTH_SHORT).show();
-
-            return true;
-        }
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

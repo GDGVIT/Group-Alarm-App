@@ -44,6 +44,20 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".NotificationReciever"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="CANCEL_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".NotificationIntentService"
+            android:exported="false" >
+        </service>
+
         <activity
             android:screenOrientation="sensorPortrait"
             android:showOnLockScreen="true"

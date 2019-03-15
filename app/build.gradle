@@ -31,16 +31,11 @@ dependencies {
     //for toogle switch
     compile 'com.rm:rmswitch:1.2.2'
 
-    //for picking ringtone
-    compile 'com.kevalpatel2106:ringtonepicker:1.2'
-
-    //circle buttonn
-    compile 'com.cuboid:cuboidcirclebutton:1.0.5'
-
     // setting time for alarm
     compile 'com.shawnlin:number-picker:2.4.4'
 
     //for fab in aboutGroupActivity
     compile 'com.github.clans:fab:1.6.4'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 
 }

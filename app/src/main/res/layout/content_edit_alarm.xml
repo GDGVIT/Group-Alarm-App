@@ -5,30 +5,9 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <LinearLayout
-        android:padding="24dp"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/backActionBar"
-            android:layout_width="30dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_actionbar_back"/>
-
-        <TextView
-            android:id="@+id/titleActionBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/manageGroup"
-            android:gravity="right"
-            android:textColor="@color/pureBlack"
-            android:layout_gravity="center"
-            android:textSize="28sp"/>
-
-    </LinearLayout>
+    <include android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/custom_main_action_bar_layout"/>
 
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -72,6 +51,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:transitionName="time"
                         android:id="@+id/alarmTime"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

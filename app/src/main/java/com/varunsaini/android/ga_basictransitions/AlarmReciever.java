@@ -41,18 +41,22 @@ public class AlarmReciever extends BroadcastReceiver {
     private static Uri ringtoneUri;
     private static String mVibrate;
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onReceive(Context context, Intent intent) {
         DatabaseHandler db = new DatabaseHandler(context);
         SQLiteDatabase sqLiteDatabase = context.openOrCreateDatabase("Alarmm", MODE_PRIVATE, null);
         request_id = intent.getIntExtra("request_code", -1);
-        backgroundColor = db.getGroupColorByTrimmedRequestId(Integer.parseInt(String.valueOf(request_id).substring(3)));
+        Log.d("gyg", "onReceive: "+request_id);
+        backgroundColor = db.getGroupColorByTrimmedRequestId(Integer.parseInt(String.valueOf(request_id).substring(3,9)));
 
         String[] ringtoneVibrateString = db.getRingtoneUriVibrate(request_id);
         if (ringtoneVibrateString[0] != null) {
             ringtoneUri = Uri.parse(ringtoneVibrateString[0]);
         }
+
+        NotificationManager mNotificationMan =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationMan.cancel(request_id);
 
 
         Log.d("cx", "onReceive: " + request_id);
@@ -68,7 +72,9 @@ public class AlarmReciever extends BroadcastReceiver {
             }
             r = RingtoneManager.getRingtone(context, ringtoneUri);
             r.play();
-            r.setLooping(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                r.setLooping(true);
+            }
             isplaying = true;
             Intent myIntent = new Intent(context, AlarmRingActivity.class);
             myIntent.putExtra("recieved_request_code",request_id);
@@ -79,11 +85,15 @@ public class AlarmReciever extends BroadcastReceiver {
             isplaying = true;
 
         }else{
-            int trimmed_request_id = Integer.parseInt(String.valueOf(request_id).substring(3));
+            int trimmed_request_id = Integer.parseInt(String.valueOf(request_id).substring(3,9));
             Toast.makeText(context, "Alarm missed at " + db.getAlarmTimeFromAlarmRequestId(trimmed_request_id), Toast.LENGTH_SHORT).show();
             AlarmManager alarmMgr1 = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent alarmIntent1 = PendingIntent.getBroadcast(context, request_id, intent, 0);
-            alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (7*24*60*60*1000), alarmIntent1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmMgr1.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (7*24*60*60*1000), alarmIntent1);
+            }else{
+                alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ (7*24*60*60*1000), alarmIntent1);
+            }
             NotificationManager mNotificationManager;
 
             NotificationCompat.Builder mBuilder =

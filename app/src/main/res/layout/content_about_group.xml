@@ -10,35 +10,12 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".AboutGroupActivity">
 
-    <LinearLayout
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/backActionBar"
-            android:layout_width="30dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_actionbar_back"/>
-
-        <TextView
-            android:id="@+id/titleActionBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/manageGroup"
-            android:gravity="right"
-            android:textColor="@color/pureBlack"
-            android:layout_gravity="center"
-            android:textSize="28sp"/>
-
-    </LinearLayout>
+    <include android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/custom_main_action_bar_layout"/>
 
     <android.support.v7.widget.CardView
+        android:transitionName="groupName"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="16dp"
@@ -49,34 +26,40 @@
 
         <LinearLayout
             android:id="@+id/full_card_lin_layout"
-            android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/list_grad_purple"
-            android:orientation="vertical">
+            android:visibility="visible">
 
             <LinearLayout
+                android:id="@+id/container_about_group"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="4dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="visible">
 
-                <EditText
-                    android:inputType="textNoSuggestions"
-                    android:background="@null"
-                    android:textCursorDrawable="@color/fabBlue"
-                    android:id="@+id/group_name"
-                    android:layout_width="0dp"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:backgroundTint="#40000000"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Group Name"
-                    android:textColor="@color/white"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="4dp"
+                    android:orientation="horizontal">
 
-                <!--<com.rm.rmswitch.RMSwitch-->
+                    <EditText xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/group_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:backgroundTint="#40000000"
+                        android:hint="Group Name"
+                        android:inputType="textNoSuggestions"
+                        android:textColor="@color/white"
+                        android:textCursorDrawable="@color/fabBlue"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <!--<com.rm.rmswitch.RMSwitch-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginRight="14dp"-->
@@ -89,169 +72,173 @@
                     <!--app:switchDesign="android"-->
                     <!--app:switchToggleCheckedColor="#ffffff"-->
                     <!--app:switchToggleNotCheckedColor="#000000" />-->
-            </LinearLayout>
+                </LinearLayout>
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <LinearLayout
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <LinearLayout
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/colorPurple"
-                    android:layout_width="40dp"
-                    android:background="@drawable/list_grad_purple"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="4dp"
-                    android:layout_height="40dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="6dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="7dp">
-                    <ImageView
-                       android:layout_width="match_parent"
-                       android:layout_height="match_parent"
-                       android:src="@drawable/selector_border_purple"
-                       android:scaleType="fitXY"/>
-                </android.support.v7.widget.CardView>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="8dp">
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/colorPurple"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/list_grad_purple"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="6dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/selector_border_purple" />
+                        </android.support.v7.widget.CardView>
 
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/colorGreen"
-                    android:background="@drawable/list_grad_green"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="4dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="10dp"
-                    android:layout_marginRight="7dp">
-                <ImageView
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/colorGreen"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/list_grad_green"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="10dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/selector_border_green" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/colorPink"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="8dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="10dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/selector_border_pink" />
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/colorW"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="8dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="10dp" />
+
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/colorX"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginRight="7dp"
+                            android:layout_marginBottom="8dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardElevation="10dp" />
+
+                        <!--<android.support.v7.widget.CardView-->
+                        <!--android:id="@+id/colorY"-->
+                        <!--android:layout_width="40dp"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_marginBottom="8dp"-->
+                        <!--android:layout_marginTop="4dp"-->
+                        <!--app:cardCornerRadius="20dp"-->
+                        <!--app:cardElevation="10dp"-->
+                        <!--android:layout_marginRight="7dp"/>-->
+
+                        <!--<android.support.v7.widget.CardView-->
+                        <!--android:id="@+id/colorZ"-->
+                        <!--android:layout_width="40dp"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:layout_marginBottom="8dp"-->
+                        <!--android:layout_marginTop="4dp"-->
+                        <!--app:cardCornerRadius="20dp"-->
+                        <!--app:cardElevation="10dp"-->
+                        <!--android:layout_marginRight="7dp"/>-->
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view_all_alarms_in_a_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/selector_border_green"
-                    android:scaleType="fitXY"/>
-                </android.support.v7.widget.CardView>
+                    android:scrollbars="vertical" />
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/colorPink"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="4dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="10dp"
-                    android:layout_marginRight="7dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/selector_border_pink"
-                    android:scaleType="fitXY"/>
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/colorW"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="4dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="10dp"
-                    android:layout_marginRight="7dp"/>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/colorX"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="4dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="10dp"
-                    android:layout_marginRight="7dp"/>
-
+                <!--This is for the individual alarm of the group-->
                 <!--<android.support.v7.widget.CardView-->
-                    <!--android:id="@+id/colorY"-->
-                    <!--android:layout_width="40dp"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:layout_marginBottom="8dp"-->
-                    <!--android:layout_marginTop="4dp"-->
-                    <!--app:cardCornerRadius="20dp"-->
-                    <!--app:cardElevation="10dp"-->
-                    <!--android:layout_marginRight="7dp"/>-->
+                <!--android:onClick="editAlarm"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/white"-->
+                <!--app:cardElevation="10dp"-->
+                <!--android:layout_marginLeft="11dp"-->
+                <!--android:layout_marginRight="11dp"-->
+                <!--android:layout_marginBottom="10dp"-->
+                <!--app:cardCornerRadius="9dp">-->
+                <!---->
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+                <!---->
+                <!--<TextView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:textSize="13sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:layout_marginTop="9dp"-->
+                <!--android:layout_marginBottom="9dp"-->
+                <!--android:layout_marginLeft="13dp"-->
+                <!--android:text="11:00 AM"/>-->
 
-                <!--<android.support.v7.widget.CardView-->
-                    <!--android:id="@+id/colorZ"-->
-                    <!--android:layout_width="40dp"-->
-                    <!--android:layout_height="40dp"-->
-                    <!--android:layout_marginBottom="8dp"-->
-                    <!--android:layout_marginTop="4dp"-->
-                    <!--app:cardCornerRadius="20dp"-->
-                    <!--app:cardElevation="10dp"-->
-                    <!--android:layout_marginRight="7dp"/>-->
+                <!--<com.rm.rmswitch.RMSwitch-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="14dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--app:checked="true"-->
+                <!--app:enabled="true"-->
+                <!--app:forceAspectRatio="false"-->
+                <!--app:switchBkgCheckedColor="#909090"-->
+                <!--app:switchBkgNotCheckedColor="#909090"-->
+                <!--app:switchToggleCheckedColor="@color/fabBlue"-->
+                <!--app:switchToggleNotCheckedColor="#000000"-->
+                <!--app:switchDesign="android"/>-->
+
+
+                <!---->
+                <!--</LinearLayout>-->
+
+
+                <!--</android.support.v7.widget.CardView>-->
+
+
             </LinearLayout>
-            </HorizontalScrollView>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/my_recycler_view_all_alarms_in_a_group"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
-
-            <!--This is for the individual alarm of the group-->
-            <!--<android.support.v7.widget.CardView-->
-            <!--android:onClick="editAlarm"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@color/white"-->
-            <!--app:cardElevation="10dp"-->
-            <!--android:layout_marginLeft="11dp"-->
-            <!--android:layout_marginRight="11dp"-->
-            <!--android:layout_marginBottom="10dp"-->
-            <!--app:cardCornerRadius="9dp">-->
-            <!---->
-            <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="horizontal">-->
-            <!---->
-            <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:textSize="13sp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:layout_marginTop="9dp"-->
-            <!--android:layout_marginBottom="9dp"-->
-            <!--android:layout_marginLeft="13dp"-->
-            <!--android:text="11:00 AM"/>-->
-
-            <!--<com.rm.rmswitch.RMSwitch-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="14dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--app:checked="true"-->
-            <!--app:enabled="true"-->
-            <!--app:forceAspectRatio="false"-->
-            <!--app:switchBkgCheckedColor="#909090"-->
-            <!--app:switchBkgNotCheckedColor="#909090"-->
-            <!--app:switchToggleCheckedColor="@color/fabBlue"-->
-            <!--app:switchToggleNotCheckedColor="#000000"-->
-            <!--app:switchDesign="android"/>-->
-
-
-            <!---->
-            <!--</LinearLayout>-->
-
-
-            <!--</android.support.v7.widget.CardView>-->
-
-
-
 
         </LinearLayout>
         </android.support.v7.widget.CardView>

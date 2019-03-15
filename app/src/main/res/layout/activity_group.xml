@@ -24,44 +24,76 @@
 
     <include layout="@layout/content_group" />
 
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fabAddGroup"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|center_horizontal"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:onClick="addGroup"-->
+        <!--android:visibility="visible"-->
+        <!--app:backgroundTint="@color/fabBlue"-->
+        <!--app:srcCompat="@drawable/baseline_add_white_18dp" />-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_gravity="center_horizontal|bottom"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/fabDeleteGroup"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|center_horizontal"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:layout_marginRight="12dp"-->
+            <!--android:visibility="invisible"-->
+            <!--app:backgroundTint="@color/fabBlue"-->
+            <!--app:srcCompat="@drawable/bin" />-->
+
+        <!--<android.support.design.widget.FloatingActionButton-->
+            <!--android:id="@+id/fabCancel"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|center_horizontal"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:visibility="invisible"-->
+            <!--app:backgroundTint="@color/selectedGroupGray"-->
+            <!--app:srcCompat="@drawable/cross"/>-->
+
+    <!--</LinearLayout>-->
     <android.support.design.widget.FloatingActionButton
+        app:elevation="3dp"
         android:id="@+id/fabAddGroup"
+        android:onClick="addGroup"
+        app:backgroundTint="@color/fabBlue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|center_horizontal"
+        app:srcCompat="@drawable/baseline_add_white_18dp" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        app:elevation="3dp"
+        android:id="@+id/fabDeleteGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_margin="@dimen/fab_margin"
-        android:onClick="addGroup"
-        android:visibility="visible"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
         app:backgroundTint="@color/fabBlue"
-        app:srcCompat="@drawable/baseline_add_white_18dp" />
+        app:srcCompat="@drawable/bin" />
 
-    <LinearLayout
-        android:layout_gravity="center_horizontal|bottom"
+    <android.support.design.widget.FloatingActionButton
+        app:elevation="3dp"
+        android:id="@+id/fabCancel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabDeleteGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="12dp"
-            android:visibility="invisible"
-            app:backgroundTint="@color/fabBlue"
-            app:srcCompat="@drawable/bin" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:visibility="invisible"
-            app:backgroundTint="@color/selectedGroupGray"
-            app:srcCompat="@drawable/cross"/>
-
-    </LinearLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        app:backgroundTint="@color/selectedGroupGray"
+        app:srcCompat="@drawable/fab_add"/>
 
 </android.support.design.widget.CoordinatorLayout>

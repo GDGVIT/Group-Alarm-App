@@ -35,10 +35,11 @@
         android:layout_gravity="bottom|center_horizontal"
         app:srcCompat="@drawable/baseline_add_white_18dp" />
 
-    <LinearLayout
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <!--<LinearLayout-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_gravity="center_horizontal|bottom"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content">-->
 
         <android.support.design.widget.FloatingActionButton
             app:elevation="3dp"
@@ -47,8 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="12dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:backgroundTint="@color/fabBlue"
             app:srcCompat="@drawable/bin" />
 
@@ -59,10 +59,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="16dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:backgroundTint="@color/selectedGroupGray"
-            app:srcCompat="@drawable/cross"/>
+            app:srcCompat="@drawable/fab_add"/>
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </android.support.design.widget.CoordinatorLayout>
