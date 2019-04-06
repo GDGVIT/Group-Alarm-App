@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:padding="24dp"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/backActionBar"
+        android:layout_width="30dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_actionbar_back"/>
+
+    <TextView
+        android:id="@+id/titleActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:gravity="right"
+        android:textColor="@color/pureBlack"
+        android:layout_gravity="center"
+        android:textSize="28sp"/>
+
+</LinearLayout>

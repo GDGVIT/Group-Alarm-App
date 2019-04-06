@@ -10,4 +10,5 @@
     <string name="title_activity_alarm_ring">AlarmRingActivity</string>
     <string name="appName">Group Alarm</string>
     <string name="manageGroup">Manage Group</string>
+    <string name="settings">Settings</string>
 </resources>

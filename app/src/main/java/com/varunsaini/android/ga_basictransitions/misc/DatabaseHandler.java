@@ -1,17 +1,19 @@
-package com.varunsaini.android.ga_basictransitions;
+package com.varunsaini.android.ga_basictransitions.misc;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 import android.util.Log;
-import android.view.MenuInflater;
+
+import com.varunsaini.android.ga_basictransitions.models.Alarm;
+import com.varunsaini.android.ga_basictransitions.models.AllAlarm;
+import com.varunsaini.android.ga_basictransitions.models.Group;
+import com.varunsaini.android.ga_basictransitions.models.GroupInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -158,7 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String[] array = new String[2];
 
-        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(3,9));
+        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(3));
         Log.d("jk", "getRingtoneUri: "+idd);
 
         String requestQuery = "SELECT "+ KEY_RINGTONE_NAME + " , " + KEY_VIBRATE + " FROM " +

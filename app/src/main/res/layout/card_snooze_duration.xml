@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    app:cardElevation="3dp"
+    app:cardCornerRadius="20dp"
+    android:onClick="snoozeDuration"
+    android:layout_marginTop="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/snoozeTitle_tv"
+            android:textSize="24sp"
+            android:textColor="@color/pureBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Snooze Duration"/>
+
+        <TextView
+            android:id="@+id/snoozeTime_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1 hour"/>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

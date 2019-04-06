@@ -1,4 +1,4 @@
-package com.varunsaini.android.ga_basictransitions;
+package com.varunsaini.android.ga_basictransitions.misc;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -7,15 +7,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.varunsaini.android.ga_basictransitions.Utils;
 
 import java.util.Calendar;
 
 public class NotificationReciever extends BroadcastReceiver {
 
-    private static final long NOTIFICATION_ALERT_TIME = Utils.NOTIFICATION_TIME;
 
     public NotificationReciever() {
         super();
@@ -32,7 +32,7 @@ public class NotificationReciever extends BroadcastReceiver {
         trimmedRequestId = intent.getIntExtra("trimmedRequestId", -1);
 
         DatabaseHandler db = new DatabaseHandler(context);
-        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3,9)));
+        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3)));
         String[] splittedTime = time.split(":");
         hour = Integer.parseInt(splittedTime[0]);
         min = Integer.parseInt(splittedTime[1]);
@@ -62,9 +62,9 @@ public class NotificationReciever extends BroadcastReceiver {
                     (context, trimmedRequestId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mNotificationManager.cancel(trimmedRequestId);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - NOTIFICATION_ALERT_TIME, pendingIntent);
+                alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - Utils.getNotificationDuration(context), pendingIntent);
             }else{
-                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - NOTIFICATION_ALERT_TIME, pendingIntent);
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - Utils.getNotificationDuration(context), pendingIntent);
             }
             Log.d("sas", "onReceive: " + trimmedRequestId);
 
@@ -77,9 +77,9 @@ public class NotificationReciever extends BroadcastReceiver {
                     (context, trimmedRequestId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mNotificationManager.cancel(trimmedRequestId);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - NOTIFICATION_ALERT_TIME, pendingIntent);
+                alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - Utils.getNotificationDuration(context), pendingIntent);
             }else{
-                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - NOTIFICATION_ALERT_TIME, pendingIntent);
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000 ) - Utils.getNotificationDuration(context), pendingIntent);
             }
             Log.d("sas", "onReceive: " + trimmedRequestId);
 

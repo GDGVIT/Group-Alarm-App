@@ -1,37 +1,25 @@
-package com.varunsaini.android.ga_basictransitions;
+package com.varunsaini.android.ga_basictransitions.activity;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.animation.DynamicAnimation;
-import android.support.animation.FlingAnimation;
 import android.support.animation.SpringAnimation;
 import android.support.animation.SpringForce;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.method.Touch;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,7 +29,13 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.varunsaini.android.ga_basictransitions.misc.AlarmReciever;
+import com.varunsaini.android.ga_basictransitions.misc.DatabaseHandler;
+import com.varunsaini.android.ga_basictransitions.misc.NotificationReciever;
+import com.varunsaini.android.ga_basictransitions.R;
+import com.varunsaini.android.ga_basictransitions.Utils;
+import com.varunsaini.android.ga_basictransitions.misc.WakeLocker;
 
 import java.util.Calendar;
 
@@ -63,7 +57,6 @@ public class AlarmRingActivity extends AppCompatActivity {
     RectF actionRect,snoozeRect,cancelRect;
     float distanceSnoozeAction,distanceCancelAction;
     RelativeLayout relativeLayout;
-    private static final long NOTIFICATION_ALERT_TIME = 1000*60*60;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -127,7 +120,7 @@ public class AlarmRingActivity extends AppCompatActivity {
                 }
             }
         };
-        handler.postDelayed(r,57000);
+        handler.postDelayed(r,Utils.getAutoSilence(this));
 
         final Handler handler1 = new Handler();
         Runnable r1 = new Runnable() {
@@ -189,7 +182,7 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         DatabaseHandler db = new DatabaseHandler(this);
 
-        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(request_id).substring(3,9)));
+        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(request_id).substring(3)));
         String[] splittedTime = time.split(":");
         hour = Integer.parseInt(splittedTime[0]);
         min = Integer.parseInt(splittedTime[1]);
@@ -231,7 +224,7 @@ public class AlarmRingActivity extends AppCompatActivity {
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         String[] ringtoneVibrateString = db.getRingtoneUriVibrate(request_id);
-        if(ringtoneVibrateString[1]!=null){
+        if(ringtoneVibrateString[1]!=null && (Utils.getAlarmType(getApplicationContext())==0)){
             if(ringtoneVibrateString[1].equals("1")){
                 long[] pattern = {0, 100, 1000};
                 v.vibrate(pattern, 0);}
@@ -316,9 +309,9 @@ public class AlarmRingActivity extends AppCompatActivity {
         PendingIntent alarmIntent1 = PendingIntent.getBroadcast(AlarmRingActivity.this, request_id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmMgr1.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ Utils.SNOOZE_TIME, alarmIntent1);
+            alarmMgr1.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ Utils.getSnoozeTime(this), alarmIntent1);
         }else{
-            alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ Utils.SNOOZE_TIME, alarmIntent1);
+            alarmMgr1.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+ Utils.getSnoozeTime(this), alarmIntent1);
         }
         WakeLocker.release();
         isTurnedOff = true;
@@ -361,9 +354,9 @@ public class AlarmRingActivity extends AppCompatActivity {
                 (this, request_id, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotificationManager.cancel(request_id);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000) - NOTIFICATION_ALERT_TIME, pendingIntent);
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000) - Utils.getNotificationDuration(getApplicationContext()), pendingIntent);
         }else{
-            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000) - NOTIFICATION_ALERT_TIME, pendingIntent);
+            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis()+ (7*24*60*60*1000) - Utils.getNotificationDuration(getApplicationContext()), pendingIntent);
         }
         Log.d("sas", "onReceive: " + request_id);
 

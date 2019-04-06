@@ -1,4 +1,4 @@
-package com.varunsaini.android.ga_basictransitions;
+package com.varunsaini.android.ga_basictransitions.misc;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -16,6 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.varunsaini.android.ga_basictransitions.R;
+import com.varunsaini.android.ga_basictransitions.activity.AllActivity;
 
 import static android.media.RingtoneManager.getDefaultUri;
 
@@ -36,20 +39,6 @@ public class NotificationIntentService extends IntentService {
         Log.d("sas", "onReceive: "+"reached notificationintentservice");
         Uri alarmSound = getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         int trimmedRequestId = intent.getIntExtra("trimmedRequestId",-1);
-//        NotificationManager mNotificationManager  = (NotificationManager) getApplication().getSystemService(Context.NOTIFICATION_SERVICE);;
-//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(),"notify_001")
-//                .setSmallIcon(R.drawable.baseline_alarm_on_white_18dp)
-//                .setContentTitle("Upcoming alarm at ")
-//                .setStyle(new NotificationCompat.BigTextStyle()
-//                        .bigText("You can choose to close this alarm in advance"))
-//                .setContentText("You can choose to close this alarm in advance").setAutoCancel(true);
-////        Intent notifyIntent = new Intent(this, MainActivity.class);
-////        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-////        //to be able to launch your activity from the notification
-////        mBuilder.setContentIntent(pendingIntent);
-//        Notification notificationCompat = mBuilder.build();
-//        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-//        managerCompat.notify(trimmedRequestId, notificationCompat);
 
         //////////////
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
@@ -63,7 +52,7 @@ public class NotificationIntentService extends IntentService {
         Intent notifyIntent = new Intent(this, AllActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, trimmedRequestId, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent yesReceive = new Intent(this,NotificationReciever.class);
+        Intent yesReceive = new Intent(this, NotificationReciever.class);
         yesReceive.putExtra("trimmedRequestId",trimmedRequestId);
         yesReceive.setAction("CANCEL_ACTION");
         PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this, trimmedRequestId, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -72,16 +61,6 @@ public class NotificationIntentService extends IntentService {
         swipeIntent.putExtra("trimmedRequestId",trimmedRequestId);
         swipeIntent.setAction("SWIPE_NOTIFICATION_ACTION");
         PendingIntent pendingIntentSwipe = PendingIntent.getBroadcast(this, trimmedRequestId, swipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        mNotificationManager.cancel(trimmedRequestId);
-//
-//
-//        AlarmManager alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-//        Intent intent2 = new Intent(this, AlarmReciever.class);
-//        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, trimmedRequestId, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-//        alarmMgr.cancel(alarmIntent);
-
-
 
         AlarmManager alarmMgr1 = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
         PendingIntent alarmIntent1 = PendingIntent.getBroadcast(this, trimmedRequestId, intent, 0);
@@ -93,11 +72,11 @@ public class NotificationIntentService extends IntentService {
 
         Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-        bigText.bigText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3,9))));
+        bigText.bigText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3))));
         bigText.setBigContentTitle("Upcoming Alarm");
         mBuilder.setSmallIcon(R.drawable.baseline_alarm_on_white_18dp);
         mBuilder.setContentTitle("Upcoming Alarm");
-        mBuilder.setContentText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3,9))));
+        mBuilder.setContentText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3))));
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setPriority(Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);

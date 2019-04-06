@@ -1,16 +1,12 @@
-package com.varunsaini.android.ga_basictransitions;
+package com.varunsaini.android.ga_basictransitions.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.graphics.ColorSpace;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rm.rmswitch.RMSwitch;
+import com.varunsaini.android.ga_basictransitions.models.Group;
+import com.varunsaini.android.ga_basictransitions.R;
+import com.varunsaini.android.ga_basictransitions.activity.AboutGroupActivity;
 
 import java.util.ArrayList;
 

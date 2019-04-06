@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"></uses-permission>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name=".activity.MainActivity" />
         <activity
-            android:name=".AllActivity"
+            android:name=".activity.AllActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,44 +27,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:screenOrientation="portrait"
-            android:name=".GroupActivity"
-            android:label="@string/title_activity_group" />
+            android:name=".activity.GroupActivity"
+            android:label="@string/title_activity_group"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
-            android:name=".AboutGroupActivity"
-            android:label="@string/title_activity_about_group" />
+            android:name=".activity.AboutGroupActivity"
+            android:label="@string/title_activity_about_group"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
-            android:name=".EditAlarmActivity"
-            android:label="@string/title_activity_edit_alarm" />
+            android:name=".activity.EditAlarmActivity"
+            android:label="@string/title_activity_edit_alarm"
+            android:screenOrientation="portrait" />
 
-        <receiver android:name=".AlarmReciever">
+        <receiver android:name=".misc.AlarmReciever">
             <intent-filter>
                 <action android:name="com.varunsaini.android.ga_basictransitions" />
             </intent-filter>
         </receiver>
-
         <receiver
-            android:name=".NotificationReciever"
+            android:name=".misc.NotificationReciever"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
-                <action android:name="CANCEL_ACTION"/>
+                <action android:name="CANCEL_ACTION" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".NotificationIntentService"
-            android:exported="false" >
-        </service>
+            android:name=".misc.NotificationIntentService"
+            android:exported="false"></service>
 
         <activity
+            android:name=".activity.AlarmRingActivity"
+            android:label="@string/title_activity_alarm_ring"
             android:screenOrientation="sensorPortrait"
             android:showOnLockScreen="true"
-            android:name=".AlarmRingActivity"
-            android:label="@string/title_activity_alarm_ring"
-            android:theme="@style/CustomTheme.NoActionBar"></activity>
+            android:theme="@style/CustomTheme.NoActionBar" />
     </application>
 
 </manifest>

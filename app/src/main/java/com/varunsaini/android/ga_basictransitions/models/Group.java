@@ -1,4 +1,4 @@
-package com.varunsaini.android.ga_basictransitions;
+package com.varunsaini.android.ga_basictransitions.models;
 
 public class Group {
 
