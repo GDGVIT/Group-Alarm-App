@@ -203,7 +203,11 @@ public class AlarmRingActivity extends AppCompatActivity {
             relativeLayout.setBackgroundResource(R.drawable.list_grad_pink);
             commonPropertyforAlarmRing();
         }else if(backgroundColor==4){
+            relativeLayout.setBackgroundResource(R.drawable.list_grad_brown);
+            commonPropertyforAlarmRing();
         }else if(backgroundColor==5){
+            relativeLayout.setBackgroundResource(R.drawable.list_grad_violet);
+            commonPropertyforAlarmRing();
         }else if(backgroundColor==6){
         }else if(backgroundColor==7){
         }else{

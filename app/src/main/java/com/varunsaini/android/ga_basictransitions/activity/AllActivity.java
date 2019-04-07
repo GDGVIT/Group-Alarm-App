@@ -164,8 +164,6 @@ public class AllActivity extends AppCompatActivity {
             View view = layoutInflater.inflate(R.layout.all_cards_layout, viewGroup, false);
             assetManager = viewGroup.getContext().getAssets();
             context = viewGroup.getContext();
-
-
             return new AllAlarmRecyclerViewAdapter.AllAlarmRecyclerViewHolder(view);
         }
 
@@ -379,6 +377,7 @@ public class AllActivity extends AppCompatActivity {
                         handler.postDelayed(r, ANIMATION_DURATION+EXTRA_TIME_ANIMATION);
                         Intent i = new Intent(context, EditAlarmActivity.class);
                         i.putExtra("alarm_pending_req_code", dd);
+                        i.putExtra("nameOfGroup",bb);
                         if(bb==null){
                             i.putExtra("belongs_to_group", 0);
                         }

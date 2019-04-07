@@ -15,7 +15,7 @@
 
         <include layout="@layout/settings_action_bar" />
 
-        <include layout="@layout/card_time_format" />
+        <!--<include layout="@layout/card_time_format" />-->
 
         <include layout="@layout/card_ascending_volume" />
 
@@ -29,7 +29,7 @@
 
         <include layout="@layout/card_alarm_type" />
 
-        <include layout="@layout/card_share_app" />
+        <!--<include layout="@layout/card_share_app" />-->
 
 
     </LinearLayout>

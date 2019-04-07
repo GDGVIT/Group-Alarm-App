@@ -59,7 +59,7 @@ public class AboutGroupActivity extends AppCompatActivity {
     EditText groupNameEditext;
     public static String groupName;
     String groupNameOnGroupOpen = "";
-    CardView colorPurple, colorGreen, colorPink;
+    CardView colorPurple, colorGreen, colorPink, colorBrown, colorViolet;
     LinearLayout fullCardLinLayout,containerAboutGroup;
     TextView titleActionBar;
     ImageView backActionBar;
@@ -72,6 +72,8 @@ public class AboutGroupActivity extends AppCompatActivity {
         colorPurple = findViewById(R.id.colorPurple);
         colorGreen = findViewById(R.id.colorGreen);
         colorPink = findViewById(R.id.colorPink);
+        colorBrown = findViewById(R.id.colorBrown);
+        colorViolet = findViewById(R.id.colorViolet);
         fullCardLinLayout = findViewById(R.id.full_card_lin_layout);
         containerAboutGroup = findViewById(R.id.container_about_group);
 
@@ -82,6 +84,8 @@ public class AboutGroupActivity extends AppCompatActivity {
         colorPurple.setPreventCornerOverlap(false);
         colorGreen.setPreventCornerOverlap(false);
         colorPink.setPreventCornerOverlap(false);
+        colorBrown.setPreventCornerOverlap(false);
+        colorViolet.setPreventCornerOverlap(false);
 
         colorPurple.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,16 +111,27 @@ public class AboutGroupActivity extends AppCompatActivity {
             }
         });
 
+        colorBrown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCardBackgroundGradient(4);
+                mGroupColor = 4;
+            }
+        });
+
+        colorViolet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setCardBackgroundGradient(5);
+                mGroupColor = 5;
+            }
+        });
+
 
         db = new DatabaseHandler(this);
         sqLiteDatabase = this.openOrCreateDatabase("Alarmm", MODE_PRIVATE, null);
         db.onCreate(sqLiteDatabase);
         db.getAllDatabaseDataInLogcat();
-
-//        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
-//        getSupportActionBar().setCustomView(R.layout.custom_2_action_bar_layout);
-//        View view = getSupportActionBar().getCustomView();
 
         backActionBar = findViewById(R.id.backActionBar);
         titleActionBar = findViewById(R.id.titleActionBar);
@@ -208,9 +223,9 @@ public class AboutGroupActivity extends AppCompatActivity {
         } else if (groupColor == 3) {
             fullCardLinLayout.setBackgroundResource(R.drawable.list_grad_pink);
         } else if (groupColor == 4) {
-
+            fullCardLinLayout.setBackgroundResource(R.drawable.list_grad_brown);
         } else if (groupColor == 5) {
-
+            fullCardLinLayout.setBackgroundResource(R.drawable.list_grad_violet);
         } else if (groupColor == 6) {
 
         } else if (groupColor == 7) {
@@ -345,6 +360,8 @@ public class AboutGroupActivity extends AppCompatActivity {
                     fabDeleteAlarm.setVisibility(View.GONE);
                     fabCancel.setVisibility(View.GONE);
                     fabAddAlarm.setVisibility(View.VISIBLE);
+                    aboutGroupRecyclerViewHolder.time.setTextColor(getResources().getColor(R.color.pureBlack));
+                    aboutGroupRecyclerViewHolder.rmsSwitch.setVisibility(View.VISIBLE);
                 }
             });
 
@@ -377,6 +394,8 @@ public class AboutGroupActivity extends AppCompatActivity {
                     fabDeleteAlarm.setVisibility(View.GONE);
                     fabCancel.setVisibility(View.GONE);
                     fabAddAlarm.setVisibility(View.VISIBLE);
+                    aboutGroupRecyclerViewHolder.time.setTextColor(getResources().getColor(R.color.pureBlack));
+                    aboutGroupRecyclerViewHolder.rmsSwitch.setVisibility(View.VISIBLE);
 
                 }
             });
@@ -404,6 +423,9 @@ public class AboutGroupActivity extends AppCompatActivity {
                         fabDeleteAlarm.setVisibility(View.GONE);
                         fabCancel.setVisibility(View.GONE);
                         fabAddAlarm.setVisibility(View.VISIBLE);
+                        aboutGroupRecyclerViewHolder.time.setTextColor(getResources().getColor(R.color.pureBlack));
+                        aboutGroupRecyclerViewHolder.rmsSwitch.setVisibility(View.VISIBLE);
+
                         Intent i = new Intent(context, EditAlarmActivity.class);
                         i.putExtra("alarm_pending_req_code", cc);
                         i.putExtra("nameOfGroup", groupNameEditext.getText().toString());
@@ -417,6 +439,8 @@ public class AboutGroupActivity extends AppCompatActivity {
                         Toast.makeText(context, "CLicked on " + cc, Toast.LENGTH_SHORT).show();
                     }
                     if (!atLeastOneSelected) {
+                        aboutGroupRecyclerViewHolder.time.setTextColor(getResources().getColor(R.color.pureBlack));
+                        aboutGroupRecyclerViewHolder.rmsSwitch.setVisibility(View.VISIBLE);
                         fabDeleteAlarm.setVisibility(View.GONE);
                         fabCancel.setVisibility(View.GONE);
                         fabAddAlarm.setVisibility(View.VISIBLE);
@@ -434,6 +458,8 @@ public class AboutGroupActivity extends AppCompatActivity {
                         s.get(i).isSelected = (true);
                         numberOfGroupsSelected++;
                         aboutGroupRecyclerViewHolder.allColor.setBackgroundResource(R.color.selectedGroupGray);
+                        aboutGroupRecyclerViewHolder.time.setTextColor(getResources().getColor(R.color.white));
+                        aboutGroupRecyclerViewHolder.rmsSwitch.setVisibility(View.INVISIBLE);
                         fabDeleteAlarm.setVisibility(View.VISIBLE);
                         fabCancel.setVisibility(View.VISIBLE);
                         fabAddAlarm.setVisibility(View.GONE);

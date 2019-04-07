@@ -30,6 +30,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReciever extends BroadcastReceiver {
 
+    private static final String TAG = "Alarmeciever";
     public static boolean isplaying = false ;
     public static Ringtone r;
     public int request_id, backgroundColor;
@@ -48,12 +49,13 @@ public class AlarmReciever extends BroadcastReceiver {
         String[] ringtoneVibrateString = db.getRingtoneUriVibrate(request_id);
         if (ringtoneVibrateString[0] != null) {
             ringtoneUri = Uri.parse(ringtoneVibrateString[0]);
+        }else{
+            ringtoneUri = null;
         }
 
         NotificationManager mNotificationMan =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationMan.cancel(request_id);
-
 
         Log.d("cx", "onReceive: " + request_id);
         WakeLocker.acquire(context);
@@ -63,6 +65,7 @@ public class AlarmReciever extends BroadcastReceiver {
         if (!isplaying) {
             if (ringtoneUri == null) {
                 ringtoneUri = Uri.parse(Utils.getDefaultAlarmSound(context));
+                Log.d(TAG, "onReceive: "+ Utils.getDefaultAlarmSound(context));
                 if(ringtoneUri==null) {
                     ringtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                     if (ringtoneUri == null) {
@@ -71,29 +74,41 @@ public class AlarmReciever extends BroadcastReceiver {
                 }
             }
             r = RingtoneManager.getRingtone(context, ringtoneUri);
-            r.play();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                r.setLooping(true);
+
+            if(Utils.getAscendingVolume(context)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    r.setLooping(true);
+                }
+                r.play();
+                final int previousAlarmVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);;
+                Log.d(TAG, "currentAlarmVolume: " + previousAlarmVolume);
+                Toast.makeText(context, "Reached in Handler", Toast.LENGTH_SHORT).show();
+                final Handler handler = new Handler();
+                Runnable runnable  = new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("sas", "onReceive: "+"eached in Handler");
+                        int currentAlarmVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
+                        if(currentAlarmVolume != mAudioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION)){
+
+                            mAudioManager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION,
+                                    AudioManager.ADJUST_RAISE, 0);
+
+                            handler.postDelayed(this,5000);
+                        }else{
+
+                        }
+
+
+                    }
+                };
+                handler.postDelayed(runnable,0);
+            }else{
+                r.play();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    r.setLooping(true);
+                }
             }
-//            if(Utils.getAscendingVolume(context)){
-//                Toast.makeText(context, "Reached in Handler", Toast.LENGTH_SHORT).show();
-//                final Handler handler = new Handler();
-//                Runnable r  = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        int currentAlarmVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-//                        if(currentAlarmVolume != mAudioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)){ //if we havent reached the max
-//                            mAudioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
-//
-//                            //here increase the volume of the alarm stream by adding currentAlarmVolume+someNewFactor
-//                            handler.postDelayed(this,5000); //"recursively call this runnable again with some delay between each increment of the volume, untill the condition above is satisfied.
-//                        }
-//                    }
-//                };
-//                handler.postDelayed(r,Utils.getAutoSilence(context));
-//            }else{
-//
-//            }
             isplaying = true;
             Intent myIntent = new Intent(context, AlarmRingActivity.class);
             myIntent.putExtra("recieved_request_code",request_id);

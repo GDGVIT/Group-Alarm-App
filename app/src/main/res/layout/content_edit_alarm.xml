@@ -364,6 +364,37 @@
 
                 </android.support.v7.widget.CardView>
 
+                <android.support.v7.widget.CardView
+                    android:id="@+id/am_pm_card"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="59dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="20dp">
+
+                    <com.shawnlin.numberpicker.NumberPicker
+                        android:id="@+id/am_pm_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:np_dividerThickness="0dp"
+                        app:np_dividerDistance="0dp"
+                        android:dividerPadding="0dp"
+                        app:np_height="59dp"
+                        app:np_max="59"
+                        app:np_min="0"
+                        app:np_orientation="horizontal"
+                        app:np_selectedTextColor="@color/fabBlue"
+                        app:np_selectedTextSize="18dp"
+                        app:np_textColor="#401e59f6"
+                        app:np_textSize="14sp"
+                        app:np_value="0"
+                        app:np_wheelItemCount="7"
+                        app:np_width="329dp" />
+
+                </android.support.v7.widget.CardView>
+
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

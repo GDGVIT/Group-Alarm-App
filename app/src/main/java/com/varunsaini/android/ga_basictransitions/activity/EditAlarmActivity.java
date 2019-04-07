@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.rm.rmswitch.RMSwitch;
 import com.shawnlin.numberpicker.NumberPicker;
 import com.varunsaini.android.ga_basictransitions.Utils;
+import com.varunsaini.android.ga_basictransitions.misc.TimeConvertor;
 import com.varunsaini.android.ga_basictransitions.models.Alarm;
 import com.varunsaini.android.ga_basictransitions.misc.AlarmReciever;
 import com.varunsaini.android.ga_basictransitions.models.AllAlarm;
@@ -48,7 +49,7 @@ public class EditAlarmActivity extends AppCompatActivity {
     TextView alarmTime, groupNameTitle, repeatText, labelText, ringtoneText, vibrateText;
     EditText labelEdittext;
     RMSwitch rmSwitch1;
-    CardView buttonMon, buttonTue, buttonWed, buttonThurs, buttonFri, buttonSat, buttonSun, vibrateCard;
+    CardView buttonMon, buttonTue, buttonWed, buttonThurs, buttonFri, buttonSat, buttonSun, vibrateCard,am_pm_card;
     TextView textMon, textTue, textWed, textThurs, textFri, textSat, textSun;
     int groupColor;
     int groupState;
@@ -64,7 +65,8 @@ public class EditAlarmActivity extends AppCompatActivity {
     String stateMon, stateTue, stateWed, stateThurs, stateFri, stateSat, stateSun;
     String[] stateOfDays;
     String[] days = {"mon", "tue", "wed", "thurs", "fri", "sat", "sun"};
-    NumberPicker min_picker, hour_picker;
+    String[] am_pm = {"AM","PM","AM","PM","AM","PM","AM","PM","AM","PM"};
+    NumberPicker min_picker, hour_picker,am_pm_picker;
     TextView titleActionBar;
     ImageView backActionBar;
     NestedScrollView scrollView;
@@ -91,7 +93,12 @@ public class EditAlarmActivity extends AppCompatActivity {
         vibrateCard = findViewById(R.id.vibrateCard);
         min_picker = findViewById(R.id.min_picker);
         hour_picker = findViewById(R.id.hour_picker);
-
+        am_pm_card = findViewById(R.id.am_pm_card);
+        am_pm_picker = findViewById(R.id.am_pm_picker);
+        am_pm_picker.setMinValue(1);
+        am_pm_picker.setMaxValue(am_pm.length);
+        am_pm_picker.setDisplayedValues(am_pm);
+        am_pm_picker.setWrapSelectorWheel(true);
         ringtoneText.setSelected(true);
 
         scrollView = findViewById(R.id.scrollView);
@@ -101,20 +108,30 @@ public class EditAlarmActivity extends AppCompatActivity {
         Calendar cc = Calendar.getInstance();
 //        hourString = String.valueOf(cc.get(Calendar.HOUR_OF_DAY));
 //        minString = String.valueOf(cc.get(Calendar.MINUTE));
+        if(Utils.getTimeFormat(this)==1){
+            hour_picker.setMinValue(1);
+            hour_picker.setMaxValue(12);
+            hour_picker.setWrapSelectorWheel(true);
+            am_pm_card.setVisibility(View.VISIBLE);
+        }
+
 
 
 
         min_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                if(newVal==0||newVal==1||newVal==2||newVal==3||newVal==4||newVal==5||newVal==6||newVal==7||newVal==8||newVal==9)
-                {
-                    minString = "0"+newVal;
-                }else{
-                    minString = String.valueOf(newVal);
+                    if (newVal == 0 || newVal == 1 || newVal == 2 || newVal == 3 || newVal == 4 || newVal == 5 || newVal == 6 || newVal == 7 || newVal == 8 || newVal == 9) {
+                        minString = "0" + newVal;
+                    } else {
+                        minString = String.valueOf(newVal);
+                    }
+                    mSelectedMinute = newVal;
+                if (Utils.getTimeFormat(getApplicationContext()) == 1) {
+                    alarmTime.setText(hourString + ":" + minString + " " );
+                } else {
+                    alarmTime.setText(hourString + ":" + minString);
                 }
-                mSelectedMinute = newVal;
-                alarmTime.setText(hourString + ":" + minString);
             }
         });
 
@@ -131,6 +148,19 @@ public class EditAlarmActivity extends AppCompatActivity {
                 alarmTime.setText(hourString + ":" + minString);
             }
         });
+
+        am_pm_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
+            }
+        });
+//        am_pm_picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+//            @Override
+//            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+//                Toast.makeText(EditAlarmActivity.this, newVal, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Karla.ttf");
@@ -306,7 +336,11 @@ public class EditAlarmActivity extends AppCompatActivity {
             }else{
                 minString = String.valueOf(mSelectedMinute);
             }
-            alarmTime.setText(hourString + ":" + minString);
+            if(Utils.getTimeFormat(this)==1){
+                alarmTime.setText(TimeConvertor.twentyFourToTwelve(mSelectedHour,mSelectedMinute));
+            }else {
+                alarmTime.setText(hourString + ":" + minString);
+            }
 
             if(allpreviousAlarmData[8]!=null) {
                 Uri uri = Uri.parse(allpreviousAlarmData[8]);
@@ -442,6 +476,7 @@ public class EditAlarmActivity extends AppCompatActivity {
         titleActionBar.setTypeface(tf1);
         min_picker.setTypeface(tf2);
         hour_picker.setTypeface(tf2);
+        am_pm_picker.setTypeface(tf2);
         titleActionBar.setText("Set your Alarm");
 
         backActionBar.setOnClickListener(new View.OnClickListener() {
@@ -494,16 +529,6 @@ public class EditAlarmActivity extends AppCompatActivity {
 
         ArrayList<AllAlarm> allAlarmArrayList = db.getAllActivtiyAlarmList();
         boolean alarmAlreadyExists = false;
-//        for (AllAlarm s : allAlarmArrayList) {
-//            if ((mSelectedHour + ":" + mSelectedMinute).equals(s.time)) {
-//                if (s.groupName != null) {
-//                    Toast.makeText(this, "Alarm Already Exists at " + s.groupName, Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(this, "Alarm Already Exists", Toast.LENGTH_SHORT).show();
-//                }
-//                alarmAlreadyExists = true;
-//            }
-//        }
         int alarm_state = 0;
         if (alarm_pending_req_code > 0) {
 

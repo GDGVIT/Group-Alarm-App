@@ -103,4 +103,18 @@ public class Utils {
         return isEnabled;
     }
 
+    public static int getTimeFormat(Context context){
+        SharedPreferences pref = context.getSharedPreferences("MyPref", 0);
+        int duration = pref.getInt("time_format",0);
+        if(duration<0){ duration=0;}
+        switch (duration){
+            case 0:
+                return 0;
+            case 1:
+                return 1;
+            default:
+                return 0 ;
+        }
+    }
+
 }

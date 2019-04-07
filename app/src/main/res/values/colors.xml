@@ -17,4 +17,8 @@
     <color name="selectedGroupGray">#909090</color>
     <color name="tenPercentVisibleBlue">#40ffffff</color>
     <color name="fiftyPercentVisible">#40000000</color>
+    <color name="brown_grad_start">#E0A674</color>
+    <color name="brown_grad_end">#ff9262</color>
+    <color name="violet_grad_start">#e074d8</color>
+    <color name="violet_grad_end">#ff62b1</color>
 </resources>

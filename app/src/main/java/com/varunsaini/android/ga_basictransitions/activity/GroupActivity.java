@@ -192,9 +192,9 @@ public class GroupActivity extends AppCompatActivity {
                 }else if(gg==3){
                     groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_pink);
                 }else if(gg==4){
-
+                    groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_brown);
                 }else if(gg==5){
-
+                    groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_violet);
                 }else if(gg==6){
 
                 }else if(gg==7){
@@ -383,9 +383,9 @@ public class GroupActivity extends AppCompatActivity {
                         }else if(model.groupColor==3){
                             animateColorChanging(groupRecyclerViewHolder.groupColor, Color.GRAY,R.color.pink_grad_start,0,model.groupColor);
                         }else if(model.groupColor==4){
-
+                            animateColorChanging(groupRecyclerViewHolder.groupColor, Color.GRAY,R.color.brown_grad_start,0,model.groupColor);
                         }else if(model.groupColor==5){
-
+                            animateColorChanging(groupRecyclerViewHolder.groupColor, Color.GRAY,R.color.pink_grad_start,0,model.groupColor);
                         }else if(model.groupColor==6){
 
                         }else if(model.groupColor==7){
@@ -468,9 +468,9 @@ public class GroupActivity extends AppCompatActivity {
             }else if(gg==3){
                 groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_pink);
             }else if(gg==4){
-
+                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_brown);
             }else if(gg==5){
-
+                groupRecyclerViewHolder.groupColor.setBackgroundResource(R.drawable.list_grad_violet);
             }else if(gg==6){
 
             }else if(gg==7){
@@ -641,6 +641,10 @@ public class GroupActivity extends AppCompatActivity {
                         v.setBackgroundResource(R.drawable.list_grad_green);
                     }else if(background==3){
                         v.setBackgroundResource(R.drawable.list_grad_pink);
+                    }else if(background==4){
+                        v.setBackgroundResource(R.drawable.list_grad_brown);
+                    }else if(background==5){
+                        v.setBackgroundResource(R.drawable.list_grad_violet);
                     }
                 }
 

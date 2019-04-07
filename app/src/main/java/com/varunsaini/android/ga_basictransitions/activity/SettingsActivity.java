@@ -67,7 +67,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if(checkedItemTimeFormat<0){ checkedItemTimeFormat=0;}
 
 
-        timeFormat_tv.setText(timeFormatArray[checkedItemTimeFormat]);
+//        timeFormat_tv.setText(timeFormatArray[checkedItemTimeFormat]);
         snoozeTime_tv.setText(snoozeDurationTime[checkedItemSnooze]);
         autoSilence_tv.setText(snoozeDurationTime[checkedItemAutoSilence]);
         notificationTime_tv.setText(notificationDurationTime[checkedItemNotification]);
@@ -96,8 +96,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         defaultSound_tv.setTypeface(tf1);
         ascendingTitle_tv.setTypeface(tf);
         ascendingSubtitle_tv.setTypeface(tf1);
-        timeFormatTitle_tv.setTypeface(tf);
-        timeFormat_tv.setTypeface(tf1);
+//        timeFormatTitle_tv.setTypeface(tf);
+//        timeFormat_tv.setTypeface(tf1);
     }
 
 
