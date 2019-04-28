@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Group-Alarm</string>
+    <string name="app_name">One Alarm</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_all">AllActivity</string>
     <string name="title_activity_group">GroupActivity</string>
@@ -8,7 +8,7 @@
     <string name="title_activity_edit_alarm">EditAlarmActivity</string>
     <string name="title_activity_alarm_reciever">AlarmReciever</string>
     <string name="title_activity_alarm_ring">AlarmRingActivity</string>
-    <string name="appName">Group Alarm</string>
+    <string name="appName">One Alarm</string>
     <string name="manageGroup">Manage Group</string>
     <string name="settings">Settings</string>
 </resources>

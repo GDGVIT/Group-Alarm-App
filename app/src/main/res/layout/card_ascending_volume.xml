@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            app:checked="true"
+            app:checked="false"
             app:enabled="true"
             app:forceAspectRatio="false"
             app:switchBkgCheckedColor="#40000000"
