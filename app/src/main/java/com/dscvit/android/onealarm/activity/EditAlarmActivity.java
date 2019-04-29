@@ -494,10 +494,11 @@ public class EditAlarmActivity extends AppCompatActivity {
 
         //////////////////////////////////////////
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone for alarm:");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select ringtone");
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,RingtoneManager.TYPE_ALARM);
         EditAlarmActivity.this.startActivityForResult(intent, 1);
     }
 
@@ -554,7 +555,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                 Intent intent = new Intent(EditAlarmActivity.this, AlarmReciever.class);
 
                 alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3)));
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,String.valueOf(alarm_pending_req_code).length()-2)));
                 for (Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(this, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
@@ -566,37 +567,37 @@ public class EditAlarmActivity extends AppCompatActivity {
 
                 for (String d : dayys) {
                     if (d.equals("mon")) {
-                        int y = Integer.valueOf("111" + x.substring(3));
+                        int y = Integer.valueOf("111" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 2, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("tue")) {
-                        int y = Integer.valueOf("222" + x.substring(3));
+                        int y = Integer.valueOf("222" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 3, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("wed")) {
-                        int y = Integer.valueOf("333" + x.substring(3));
+                        int y = Integer.valueOf("333" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 4, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("thurs")) {
-                        int y = Integer.valueOf("444" + x.substring(3));
+                        int y = Integer.valueOf("444" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 5, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("fri")) {
-                        int y = Integer.valueOf("555" + x.substring(3));
+                        int y = Integer.valueOf("555" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 6, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sat")) {
-                        int y = Integer.valueOf("666" + x.substring(3));
+                        int y = Integer.valueOf("666" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 7, k);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sun")) {
-                        int y = Integer.valueOf("777" + x.substring(3));
+                        int y = Integer.valueOf("777" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 1, k);
                         allRequests[k] = y;
                         k++;
@@ -604,7 +605,7 @@ public class EditAlarmActivity extends AppCompatActivity {
                 }
 
 
-                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3)));
+                db.removeDaysPendingReq(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,x.length()-2)));
                 for (int i = 0; i < dayys.length; i++) {
                     db.addDaysPendingReq(allRequests[i]);
                 }
@@ -649,37 +650,37 @@ public class EditAlarmActivity extends AppCompatActivity {
                     int k = 0;
                     for (String d : dayys) {
                         if (d.equals("mon")) {
-                            int y = Integer.parseInt("111" + x.substring(3));
+                            int y = Integer.parseInt("111" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 2, k);
                             k++;
                         } else if (d.equals("tue")) {
-                            int y = Integer.parseInt("222" + x.substring(3));
+                            int y = Integer.parseInt("222" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 3, k);
                             k++;
                         } else if (d.equals("wed")) {
-                            int y = Integer.parseInt("333" + x.substring(3));
+                            int y = Integer.parseInt("333" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 4, k);
                             k++;
                         } else if (d.equals("thurs")) {
-                            int y = Integer.parseInt("444" + x.substring(3));
+                            int y = Integer.parseInt("444" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 5, k);
                             k++;
                         } else if (d.equals("fri")) {
-                            int y = Integer.parseInt("555" + x.substring(3));
+                            int y = Integer.parseInt("555" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 6, k);
                             k++;
                         } else if (d.equals("sat")) {
-                            int y = Integer.parseInt("666" + x.substring(3));
+                            int y = Integer.parseInt("666" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 7, k);
                             k++;
                         } else if (d.equals("sun")) {
-                            int y = Integer.parseInt("777" + x.substring(3));
+                            int y = Integer.parseInt("777" + x.substring(3,x.length()-2));
                             db.addDaysPendingReq(y);
                             settingAlarmOnDays(y, 1, k);
                             k++;

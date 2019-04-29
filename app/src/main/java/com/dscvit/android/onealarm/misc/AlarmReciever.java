@@ -45,7 +45,7 @@ public class AlarmReciever extends BroadcastReceiver {
         request_id = intent.getIntExtra("request_code", -1);
         Log.d("gyg", "onReceive: "+request_id);
         r = RingtoneManager.getRingtone(context, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
-        backgroundColor = db.getGroupColorByTrimmedRequestId(Integer.parseInt(String.valueOf(request_id).substring(3)));
+        backgroundColor = db.getGroupColorByTrimmedRequestId(Integer.parseInt(String.valueOf(request_id).substring(3,String.valueOf(request_id).length()-2)));
         final AudioManager mAudioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         String[] ringtoneVibrateString = db.getRingtoneUriVibrate(request_id);
         if (ringtoneVibrateString[0] != null) {
@@ -124,7 +124,7 @@ public class AlarmReciever extends BroadcastReceiver {
             isplaying = true;
 
         }else{
-            int trimmed_request_id = Integer.parseInt(String.valueOf(request_id).substring(3));
+            int trimmed_request_id = Integer.parseInt(String.valueOf(request_id).substring(3,String.valueOf(request_id).length()-2));
 //            Toast.makeText(context, "Alarm missed at " + db.getAlarmTimeFromAlarmRequestId(trimmed_request_id), Toast.LENGTH_SHORT).show();
             AlarmManager alarmMgr1 = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
             PendingIntent alarmIntent1 = PendingIntent.getBroadcast(context, request_id, intent, 0);

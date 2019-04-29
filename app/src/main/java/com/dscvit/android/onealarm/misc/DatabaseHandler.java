@@ -160,7 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String[] array = new String[2];
 
-        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(3));
+        Integer idd = Integer.parseInt(String.valueOf(request_id).substring(3,String.valueOf(request_id).length()-2));
         Log.d("jk", "getRingtoneUri: "+idd);
 
         String requestQuery = "SELECT "+ KEY_RINGTONE_NAME + " , " + KEY_VIBRATE + " FROM " +

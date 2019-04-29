@@ -72,11 +72,11 @@ public class NotificationIntentService extends IntentService {
 
         Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-        bigText.bigText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3))));
+        bigText.bigText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3,String.valueOf(trimmedRequestId).length()-2))));
         bigText.setBigContentTitle("Upcoming Alarm");
         mBuilder.setSmallIcon(R.drawable.baseline_alarm_on_white_18dp);
         mBuilder.setContentTitle("Upcoming Alarm");
-        mBuilder.setContentText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3))));
+        mBuilder.setContentText("Upcoming Alarm at " + db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(trimmedRequestId).substring(3,String.valueOf(trimmedRequestId).length()-2))));
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setPriority(Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);

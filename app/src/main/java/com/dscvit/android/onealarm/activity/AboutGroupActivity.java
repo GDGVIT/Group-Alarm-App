@@ -294,7 +294,7 @@ public class AboutGroupActivity extends AppCompatActivity {
                     final DatabaseHandler db = new DatabaseHandler(context);
                     if (aboutGroupRecyclerViewHolder.rmsSwitch.isChecked()) {
                         aboutGroupRecyclerViewHolder.rmsSwitch.toggle();
-                        ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(cc).substring(3)));
+                        ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(cc).substring(3,String.valueOf(cc).length()-2)));
                         for (Integer i : integerArrayList) {
                             PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             alarmMgr.cancel(alarmIntent);
@@ -378,14 +378,14 @@ public class AboutGroupActivity extends AppCompatActivity {
                         Log.d("fggf", "onClick: " + intString.get(i) + "||");
 
                         db.deleteAnAlarm(s.get(intString.get(i)).alarm_pending_req_code);
-                        ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).substring(3)));
+                        ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).substring(3,String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).length()-2)));
                         for (Integer ii : integerArrayList) {
                             PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(ii), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                             alarmMgr.cancel(alarmIntent);
                             nMgr = (NotificationManager)getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
                             nMgr.cancel(Integer.valueOf(ii));
                         }
-                        db.removeDaysPendingReq(Integer.valueOf(String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).substring(3)));
+                        db.removeDaysPendingReq(Integer.valueOf(String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).substring(3,String.valueOf(s.get(intString.get(i)).alarm_pending_req_code).length()-2)));
                         s.remove(intString.get(i).intValue());
                         notifyItemRemoved(intString.get(i));
                     }
@@ -520,7 +520,7 @@ public class AboutGroupActivity extends AppCompatActivity {
                 int k = 0;
 
                 alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3)));
+                ArrayList<Integer> integerArrayList = db.getThisAlarmIntents(Integer.valueOf(String.valueOf(alarm_pending_req_code).substring(3,String.valueOf(alarm_pending_req_code).length()-2)));
                 for (Integer i : integerArrayList) {
                     PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Integer.valueOf(i), intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     alarmMgr.cancel(alarmIntent);
@@ -532,37 +532,37 @@ public class AboutGroupActivity extends AppCompatActivity {
 
                 for (String d : dayys) {
                     if (d.equals("mon")) {
-                        int y = Integer.valueOf("111" + x.substring(3));
+                        int y = Integer.valueOf("111" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 2, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("tue")) {
-                        int y = Integer.valueOf("222" + x.substring(3));
+                        int y = Integer.valueOf("222" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 3, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("wed")) {
-                        int y = Integer.valueOf("333" + x.substring(3));
+                        int y = Integer.valueOf("333" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 4, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("thurs")) {
-                        int y = Integer.valueOf("444" + x.substring(3));
+                        int y = Integer.valueOf("444" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 5, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("fri")) {
-                        int y = Integer.valueOf("555" + x.substring(3));
+                        int y = Integer.valueOf("555" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 6, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sat")) {
-                        int y = Integer.valueOf("666" + x.substring(3));
+                        int y = Integer.valueOf("666" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 7, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;
                     } else if (d.equals("sun")) {
-                        int y = Integer.valueOf("777" + x.substring(3));
+                        int y = Integer.valueOf("777" + x.substring(3,x.length()-2));
                         settingAlarmOnDays(y, 1, k,hourMin[0],hourMin[1]);
                         allRequests[k] = y;
                         k++;

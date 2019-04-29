@@ -182,7 +182,7 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         DatabaseHandler db = new DatabaseHandler(this);
 
-        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(request_id).substring(3)));
+        String time = db.getAlarmTimeFromAlarmRequestId(Integer.parseInt(String.valueOf(request_id).substring(3,String.valueOf(request_id).length()-2)));
         String[] splittedTime = time.split(":");
         hour = Integer.parseInt(splittedTime[0]);
         min = Integer.parseInt(splittedTime[1]);
