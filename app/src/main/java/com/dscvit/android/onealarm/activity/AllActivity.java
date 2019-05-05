@@ -70,7 +70,7 @@ public class AllActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all);
+        setContentView(R.layout.activity_all_alarms);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Karla-Bold.ttf");
 

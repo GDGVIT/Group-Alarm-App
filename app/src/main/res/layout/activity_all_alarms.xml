@@ -4,44 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AboutGroupActivity">
+    tools:context=".activity.AllActivity">
 
     <!--<android.support.design.widget.AppBarLayout-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:theme="@style/CustomTheme.AppBarOverlay">-->
+        <!--android:background="#ffffff"-->
+        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
         <!--<android.support.v7.widget.Toolbar-->
             <!--android:id="@+id/toolbar"-->
+            <!--app:titleTextColor="@color/colorAccent"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="?attr/actionBarSize"-->
-            <!--android:background="?attr/colorPrimary"-->
-            <!--app:popupTheme="@style/CustomTheme.PopupOverlay"-->
-            <!--/>-->
+            <!--android:background="#ffffff"-->
+            <!--app:popupTheme="@style/AppTheme.PopupOverlay" />-->
 
     <!--</android.support.design.widget.AppBarLayout>-->
 
+    <include layout="@layout/content_all_alarms" />
 
-    <include layout="@layout/content_about_group" />
-
-
-    <com.github.clans.fab.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         app:elevation="3dp"
         android:id="@+id/fabAddAlarm"
         android:onClick="newAlarm"
-        app:fab_colorNormal="#40000000"
-        app:fab_colorPressed="#40000000"
-        app:fab_colorRipple="#40000000"
+        app:backgroundTint="@color/fabBlue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:src="@drawable/fab_add"/>
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|center_horizontal"
+        app:srcCompat="@drawable/baseline_add_white_18dp" />
 
-    <LinearLayout
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <!--<LinearLayout-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_gravity="center_horizontal|bottom"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content">-->
 
         <android.support.design.widget.FloatingActionButton
             app:elevation="3dp"
@@ -49,9 +47,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="64dp"
-            android:layout_marginRight="12dp"
-            android:visibility="invisible"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
             app:backgroundTint="@color/fabBlue"
             app:srcCompat="@drawable/bin" />
 
@@ -61,13 +58,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="64dp"
-            android:visibility="invisible"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
             app:backgroundTint="@color/selectedGroupGray"
-            app:srcCompat="@drawable/cross"/>
+            app:srcCompat="@drawable/fab_add"/>
 
-    </LinearLayout>
-
-
+    <!--</LinearLayout>-->
 
 </android.support.design.widget.CoordinatorLayout>
